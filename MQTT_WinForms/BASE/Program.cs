@@ -1,4 +1,4 @@
-namespace MQTT_WinForms
+namespace MQTT_WinForms.BASE
 {
     internal static class Program
     {

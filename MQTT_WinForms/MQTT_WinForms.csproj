@@ -27,4 +27,9 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MQTT\" />
+    <Folder Include="DB\" />
+  </ItemGroup>
+
 </Project>

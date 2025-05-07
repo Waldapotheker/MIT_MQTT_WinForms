@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MQTT_WinForms.MQTT
+namespace MQTT_WinForms.UI.MQTT
 {
     public static class MQTTConnectionHelper
     {
@@ -17,7 +17,7 @@ namespace MQTT_WinForms.MQTT
 
             return clientBuilder;
         }
-    
-    
+
+
     }
 }

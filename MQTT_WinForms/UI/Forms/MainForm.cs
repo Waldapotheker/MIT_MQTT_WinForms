@@ -1,5 +1,4 @@
-
-using MQTT_WinForms.Helpers;
+using MQTT_WinForms.UI.Helpers;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 

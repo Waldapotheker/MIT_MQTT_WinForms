@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MQTT_WinForms.Helpers
+namespace MQTT_WinForms.UI.Helpers
 {
     public static class TabHelper
     {
@@ -30,10 +30,10 @@ namespace MQTT_WinForms.Helpers
             welcomeControl.Show();
             tabPage.Controls.Add(welcomeControl);
             tabControl.Controls.Add(tabPage);
-            
+
             return tabPage;
         }
-        
+
         public static MainForm GetMainForm(object sender)
         {
             MainForm mainForm = null;
@@ -42,11 +42,11 @@ namespace MQTT_WinForms.Helpers
                 case "ToolStripButton":
                     mainForm = ToolStripButton();
                     break;
-                
+
                 case "ToolStripMenuItem":
                     mainForm = ToolStripMenuItem();
                     break;
-                
+
                 default:
                     throw new NotImplementedException("Falscher Datentyp");
 
@@ -77,14 +77,14 @@ namespace MQTT_WinForms.Helpers
                     else
                         break;
                 }
-                
+
                 if (current != null)
                 {
                     Form parent = current.FindForm();
                     mainForm = parent as MainForm;
                 }
-                
-                
+
+
                 return mainForm;
             }
             return mainForm;
