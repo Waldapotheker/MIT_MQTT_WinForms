@@ -1,15 +1,18 @@
+using Microsoft.EntityFrameworkCore;
+using MQTT_WinForms.DB;
+
 namespace MQTT_WinForms.BASE
 {
     internal static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            using (DataBaseContext context = new())
+            {
+                context.Database.Migrate();
+            }
+
             ApplicationConfiguration.Initialize();
             Application.Run(new MainForm());
         }
