@@ -1,4 +1,4 @@
-﻿using MQTT_WinForms.MQTT;
+﻿using MQTT_WinForms.UI.MQTT;
 using MQTTnet;
 using System;
 using System.Collections.Generic;
