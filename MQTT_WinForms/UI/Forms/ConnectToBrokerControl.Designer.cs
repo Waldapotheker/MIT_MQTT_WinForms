@@ -41,50 +41,51 @@
             label5 = new Label();
             toolStrip1 = new ToolStrip();
             toolStripButtonConnect = new ToolStripButton();
-            listView1 = new ListView();
+            toolStripButtonView = new ToolStripButton();
+            toolStripButtonSave = new ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)nudPort).BeginInit();
             toolStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // tbAdresse
             // 
-            tbAdresse.Location = new Point(195, 110);
+            tbAdresse.Location = new Point(162, 30);
             tbAdresse.Name = "tbAdresse";
-            tbAdresse.Size = new Size(269, 27);
+            tbAdresse.Size = new Size(625, 27);
             tbAdresse.TabIndex = 0;
             // 
             // nudPort
             // 
-            nudPort.Location = new Point(195, 143);
+            nudPort.Location = new Point(162, 63);
             nudPort.Name = "nudPort";
-            nudPort.Size = new Size(269, 27);
+            nudPort.Size = new Size(625, 27);
             nudPort.TabIndex = 1;
             // 
             // tbClientId
             // 
-            tbClientId.Location = new Point(195, 176);
+            tbClientId.Location = new Point(162, 96);
             tbClientId.Name = "tbClientId";
-            tbClientId.Size = new Size(269, 27);
+            tbClientId.Size = new Size(625, 27);
             tbClientId.TabIndex = 2;
             // 
             // tbUsername
             // 
-            tbUsername.Location = new Point(195, 209);
+            tbUsername.Location = new Point(162, 129);
             tbUsername.Name = "tbUsername";
-            tbUsername.Size = new Size(269, 27);
+            tbUsername.Size = new Size(625, 27);
             tbUsername.TabIndex = 3;
             // 
             // tbPasswort
             // 
-            tbPasswort.Location = new Point(195, 242);
+            tbPasswort.Location = new Point(162, 162);
             tbPasswort.Name = "tbPasswort";
-            tbPasswort.Size = new Size(269, 27);
+            tbPasswort.Size = new Size(625, 27);
             tbPasswort.TabIndex = 4;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(45, 113);
+            label1.Location = new Point(12, 33);
             label1.Name = "label1";
             label1.Size = new Size(116, 20);
             label1.TabIndex = 5;
@@ -93,7 +94,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(45, 145);
+            label2.Location = new Point(12, 65);
             label2.Name = "label2";
             label2.Size = new Size(41, 20);
             label2.TabIndex = 6;
@@ -102,7 +103,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(45, 179);
+            label3.Location = new Point(12, 99);
             label3.Name = "label3";
             label3.Size = new Size(74, 20);
             label3.TabIndex = 7;
@@ -111,7 +112,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(45, 212);
+            label4.Location = new Point(12, 132);
             label4.Name = "label4";
             label4.Size = new Size(75, 20);
             label4.TabIndex = 8;
@@ -120,7 +121,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(45, 245);
+            label5.Location = new Point(12, 165);
             label5.Name = "label5";
             label5.Size = new Size(66, 20);
             label5.TabIndex = 9;
@@ -129,7 +130,7 @@
             // toolStrip1
             // 
             toolStrip1.ImageScalingSize = new Size(20, 20);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonConnect });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonConnect, toolStripButtonView, toolStripButtonSave });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(1006, 27);
@@ -146,21 +147,30 @@
             toolStripButtonConnect.Text = "Connect";
             toolStripButtonConnect.Click += toolStripButtonConnect_Click;
             // 
-            // listView1
+            // toolStripButtonView
             // 
-            listView1.Dock = DockStyle.Right;
-            listView1.Location = new Point(470, 27);
-            listView1.Name = "listView1";
-            listView1.Size = new Size(536, 502);
-            listView1.TabIndex = 11;
-            listView1.UseCompatibleStateImageBehavior = false;
+            toolStripButtonView.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripButtonView.Image = (Image)resources.GetObject("toolStripButtonView.Image");
+            toolStripButtonView.ImageTransparentColor = Color.Magenta;
+            toolStripButtonView.Name = "toolStripButtonView";
+            toolStripButtonView.Size = new Size(29, 24);
+            toolStripButtonView.Text = "View umschalten";
+            toolStripButtonView.Click += toolStripButtonView_Click;
+            // 
+            // toolStripButtonSave
+            // 
+            toolStripButtonSave.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripButtonSave.Image = (Image)resources.GetObject("toolStripButtonSave.Image");
+            toolStripButtonSave.ImageTransparentColor = Color.Magenta;
+            toolStripButtonSave.Name = "toolStripButtonSave";
+            toolStripButtonSave.Size = new Size(29, 24);
+            toolStripButtonSave.Text = "Verbindung speichern";
             // 
             // ConnectToBrokerControl
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BorderStyle = BorderStyle.FixedSingle;
-            Controls.Add(listView1);
             Controls.Add(toolStrip1);
             Controls.Add(label5);
             Controls.Add(label4);
@@ -195,6 +205,7 @@
         private Label label5;
         private ToolStrip toolStrip1;
         private ToolStripButton toolStripButtonConnect;
-        private ListView listView1;
+        private ToolStripButton toolStripButtonView;
+        private ToolStripButton toolStripButtonSave;
     }
 }

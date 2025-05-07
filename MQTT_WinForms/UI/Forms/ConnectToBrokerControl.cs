@@ -1,5 +1,4 @@
-﻿using MQTT_WinForms.UI.MQTT;
-using MQTTnet;
+﻿using MQTTnet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,7 +20,13 @@ namespace MQTT_WinForms.Forms
 
         private void toolStripButtonConnect_Click(object sender, EventArgs e)
         {
-            MqttClientOptionsBuilder clientConnection = MQTTConnectionHelper.NewClientObjectsBuilder(tbAdresse.Text, Convert.ToInt32(nudPort.Value), tbClientId.Text);  
+
+        }
+
+        private void toolStripButtonView_Click(object sender, EventArgs e)
+        {
+            TextBox textBox = new TextBox();
+            textBox.Multiline = true;
         }
     }
 }
