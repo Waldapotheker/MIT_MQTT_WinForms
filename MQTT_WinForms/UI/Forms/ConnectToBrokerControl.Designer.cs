@@ -43,6 +43,7 @@
             toolStripButtonConnect = new ToolStripButton();
             toolStripButtonView = new ToolStripButton();
             toolStripButtonSave = new ToolStripButton();
+            richTextBoxAusgabe = new RichTextBox();
             ((System.ComponentModel.ISupportInitialize)nudPort).BeginInit();
             toolStrip1.SuspendLayout();
             SuspendLayout();
@@ -166,11 +167,22 @@
             toolStripButtonSave.Size = new Size(29, 24);
             toolStripButtonSave.Text = "Verbindung speichern";
             // 
+            // richTextBoxAusgabe
+            // 
+            richTextBoxAusgabe.Dock = DockStyle.Bottom;
+            richTextBoxAusgabe.Location = new Point(0, 195);
+            richTextBoxAusgabe.Name = "richTextBoxAusgabe";
+            richTextBoxAusgabe.Size = new Size(1006, 334);
+            richTextBoxAusgabe.TabIndex = 11;
+            richTextBoxAusgabe.Text = "";
+            richTextBoxAusgabe.Visible = false;
+            // 
             // ConnectToBrokerControl
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BorderStyle = BorderStyle.FixedSingle;
+            Controls.Add(richTextBoxAusgabe);
             Controls.Add(toolStrip1);
             Controls.Add(label5);
             Controls.Add(label4);
@@ -207,5 +219,6 @@
         private ToolStripButton toolStripButtonConnect;
         private ToolStripButton toolStripButtonView;
         private ToolStripButton toolStripButtonSave;
+        private RichTextBox richTextBoxAusgabe;
     }
 }

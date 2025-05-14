@@ -25,8 +25,12 @@ namespace MQTT_WinForms.Forms
 
         private void toolStripButtonView_Click(object sender, EventArgs e)
         {
-            TextBox textBox = new TextBox();
-            textBox.Multiline = true;
+            if (!richTextBoxAusgabe.Visible)
+                richTextBoxAusgabe.Visible = true;
+            else
+                richTextBoxAusgabe.Visible = false;
+
+
         }
     }
 }
