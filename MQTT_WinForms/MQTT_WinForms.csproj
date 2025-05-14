@@ -9,6 +9,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="UI\Icons\calendar-day.png" />
+    <None Remove="UI\Icons\cross.png" />
+    <None Remove="UI\Icons\edit.png" />
+    <None Remove="UI\Icons\Icon_Close.png" />
+    <None Remove="UI\Icons\Icon_Connect.png" />
+    <None Remove="UI\Icons\Icon_New.png" />
+    <None Remove="UI\Icons\Icon_Refresh.png" />
+    <None Remove="UI\Icons\Icon_Save.png" />
+    <None Remove="UI\Icons\Icon_Trash.png" />
+    <None Remove="UI\Icons\Icon_Window.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Icons\calendar-day.png" />
+    <EmbeddedResource Include="UI\Icons\cross.png" />
+    <EmbeddedResource Include="UI\Icons\edit.png" />
+    <EmbeddedResource Include="UI\Icons\Icon_Close.png" />
+    <EmbeddedResource Include="UI\Icons\Icon_Connect.png" />
+    <EmbeddedResource Include="UI\Icons\Icon_New.png" />
+    <EmbeddedResource Include="UI\Icons\Icon_Refresh.png" />
+    <EmbeddedResource Include="UI\Icons\Icon_Save.png" />
+    <EmbeddedResource Include="UI\Icons\Icon_Trash.png" />
+    <EmbeddedResource Include="UI\Icons\Icon_Window.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.4">

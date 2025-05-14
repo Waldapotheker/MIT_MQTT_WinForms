@@ -5,12 +5,7 @@ namespace MQTT_WinForms.DB
 {
     public class DataBaseContext : DbContext
     {
-        private string path;
-        public string SavePath
-        {
-            get { return path; }
-            private set { path = value; }
-        }
+        public string SavePath { get; set; }
 
         public DbSet<Message> Messages { get; set; }
 
