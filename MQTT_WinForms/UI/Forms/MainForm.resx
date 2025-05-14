@@ -126,18 +126,21 @@
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="toolStripDropDownButton1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAA/SURBVDhPY2DAD44yMDAcRhckBfyHYrLBqAFEGgCKKphC
-        UjE4ikEEugSx+BC6a9ABTCHZYNQAKhgAimK8UQUAVbo55yRWng4AAAAASUVORK5CYII=
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAACXSURBVFhH7ZUxCoAwFMV65LYndPNAuuvUJVBK0z/+wF/E
+        hLeIpSTJhNba23v/dq7WerGjYXzjbrYUI8jnM8JHHA44HxEw4GxE0AA/InCAG7E7YPXZ8v0lWgS6o0Wg
+        O1oEuqNFoDtaBLqjRaA7WgS6o0WgO1oEuqNFoDtaBLqjRaA7WgS6o0WgO0OMOvaXrP7vm/ewnySDH4Mt
+        lmBhcjFeAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="stripButtonCloseTab.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAACZSURBVDhPpZPBDoMwDEPfTwxt//8nwG07bYd9DsiIoshN
-        pYr6QpvYDrUUgBV4AxP9EPcDLLrosAG/ThNxxJVGg3kA37PwB16uCHDus9XITJxziVuEaOK9SlzgRJl4
-        rSkuiCHpG889IR+IU7snR2QGWbAphp6QBea15p84Mb7Ze5WJE7LAnHOZeCMTFzj3MBleJq3knXWWZt4B
-        uIxRTWp5jQgAAAAASUVORK5CYII=
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAADRSURBVFhH7ZbBDcMgDEWzB86uPVY9dp1mhoYslFZOsUQt
+        MLSxlRz8JJ+w+R8DgmFwHEcgAkwRYI0AVz7WAmuWT+3Ex7rAwgXgRfEM4cZzamBuXvuXCVx5PkmvCS6e
+        DKw8r0lq4ddELRMl8WTg5y3cmEO48Mkw5nG881x1caLHhJk4IZkwFydqQqWQzskuap3IQ33lHMmEuTgi
+        bUXpdqgiiZub6BGnUD+ENXHc89qZUOuEJE45ZiZ6xAl1E4c/Rmd4jo/9kCB7v2Sp9sHHHMfJeQPcr7KQ
+        vOAJDwAAAABJRU5ErkJggg==
 </value>
   </data>
 </root>
