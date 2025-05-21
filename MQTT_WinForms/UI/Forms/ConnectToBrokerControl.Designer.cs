@@ -58,6 +58,7 @@
             // nudPort
             // 
             nudPort.Location = new Point(153, 74);
+            nudPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
             nudPort.Name = "nudPort";
             nudPort.Size = new Size(625, 27);
             nudPort.TabIndex = 1;
@@ -176,11 +177,11 @@
             // richTextBoxAusgabe
             // 
             richTextBoxAusgabe.BorderStyle = BorderStyle.FixedSingle;
-            richTextBoxAusgabe.Location = new Point(3, 234);
+            richTextBoxAusgabe.Location = new Point(0, 209);
             richTextBoxAusgabe.Margin = new Padding(6);
             richTextBoxAusgabe.Name = "richTextBoxAusgabe";
             richTextBoxAusgabe.ReadOnly = true;
-            richTextBoxAusgabe.Size = new Size(998, 290);
+            richTextBoxAusgabe.Size = new Size(1006, 320);
             richTextBoxAusgabe.TabIndex = 11;
             richTextBoxAusgabe.Text = "";
             richTextBoxAusgabe.Visible = false;

@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MQTT_WinForms.BASE;
+using MQTT_WinForms.MQTT;
 
 namespace MQTT_WinForms.Forms
 {
@@ -18,9 +19,10 @@ namespace MQTT_WinForms.Forms
         public ConnectToBrokerControl()
         {
             InitializeComponent();
+            richTextBoxAusgabe.Dock = DockStyle.Fill;
         }
 
-        private void toolStripButtonConnect_Click(object sender, EventArgs e)
+        private async void toolStripButtonConnect_Click(object sender, EventArgs e)
         {
             ConnectionData connectionData = new ConnectionData()
             {
@@ -30,6 +32,8 @@ namespace MQTT_WinForms.Forms
                 Username = tbUsername.Text,
                 Password = tbPasswort.Text,
             };
+
+            await MQTT.MqttClient.ConnectToMqttServer(connectionData);
         }
 
         private void toolStripButtonView_Click(object sender, EventArgs e)
