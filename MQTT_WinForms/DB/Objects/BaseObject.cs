@@ -7,9 +7,12 @@ namespace MQTT_WinForms.DB.Objects
         public BaseObject()
         {
             ID = Guid.NewGuid();
+            CreationTime = DateTime.Now;
         }
 
         [Key]
         public Guid ID { get; private set; }
+
+        public DateTime CreationTime { get; private set; }
     }
 }

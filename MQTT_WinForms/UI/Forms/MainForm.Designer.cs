@@ -34,6 +34,7 @@
             toolStrip = new ToolStrip();
             toolStripDropDownButton1 = new ToolStripDropDownButton();
             newConnectionToolStripMenuItem = new ToolStripMenuItem();
+            toolStripButton1 = new ToolStripButton();
             stripButtonCloseTab = new ToolStripButton();
             tabControl = new TabControl();
             toolStrip.SuspendLayout();
@@ -50,7 +51,7 @@
             toolStrip.AutoSize = false;
             toolStrip.GripStyle = ToolStripGripStyle.Hidden;
             toolStrip.ImageScalingSize = new Size(20, 20);
-            toolStrip.Items.AddRange(new ToolStripItem[] { toolStripDropDownButton1, stripButtonCloseTab });
+            toolStrip.Items.AddRange(new ToolStripItem[] { toolStripDropDownButton1, toolStripButton1, stripButtonCloseTab });
             toolStrip.LayoutStyle = ToolStripLayoutStyle.HorizontalStackWithOverflow;
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
@@ -74,9 +75,19 @@
             // newConnectionToolStripMenuItem
             // 
             newConnectionToolStripMenuItem.Name = "newConnectionToolStripMenuItem";
-            newConnectionToolStripMenuItem.Size = new Size(270, 34);
+            newConnectionToolStripMenuItem.Size = new Size(258, 34);
             newConnectionToolStripMenuItem.Text = "Connect To Broker";
             newConnectionToolStripMenuItem.Click += NewConnectionToolStripMenuItem_Click;
+            // 
+            // toolStripButton1
+            // 
+            toolStripButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripButton1.Image = (Image)resources.GetObject("toolStripButton1.Image");
+            toolStripButton1.ImageTransparentColor = Color.Magenta;
+            toolStripButton1.Name = "toolStripButton1";
+            toolStripButton1.Size = new Size(34, 40);
+            toolStripButton1.Text = "toolStripButton1";
+            toolStripButton1.Click += toolStripButton1_Click;
             // 
             // stripButtonCloseTab
             // 
@@ -92,9 +103,11 @@
             // tabControl
             // 
             tabControl.Dock = DockStyle.Fill;
+            tabControl.HotTrack = true;
             tabControl.Location = new Point(0, 45);
-            tabControl.Margin = new Padding(4, 5, 4, 5);
+            tabControl.Margin = new Padding(0);
             tabControl.Name = "tabControl";
+            tabControl.Padding = new Point(0, 0);
             tabControl.SelectedIndex = 0;
             tabControl.Size = new Size(1142, 705);
             tabControl.TabIndex = 2;
@@ -122,5 +135,6 @@
         private ToolStripMenuItem newConnectionToolStripMenuItem;
         private TabControl tabControl;
         private ToolStripButton stripButtonCloseTab;
+        private ToolStripButton toolStripButton1;
     }
 }

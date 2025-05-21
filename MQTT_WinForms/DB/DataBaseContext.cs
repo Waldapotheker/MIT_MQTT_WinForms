@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MQTT_WinForms.DB.Objects;
 using Message = MQTT_WinForms.DB.Objects.Message;
 
 namespace MQTT_WinForms.DB
@@ -8,6 +9,8 @@ namespace MQTT_WinForms.DB
         public string SavePath { get; set; }
 
         public DbSet<Message> Messages { get; set; }
+
+        public DbSet<Connection> Connections { get; set; }
 
         public DataBaseContext()
         {

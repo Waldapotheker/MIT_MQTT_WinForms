@@ -44,8 +44,11 @@
             toolStripButtonView = new ToolStripButton();
             toolStripButtonSave = new ToolStripButton();
             richTextBoxAusgabe = new RichTextBox();
+            statusStrip1 = new StatusStrip();
+            toolStripStatusLabel = new ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)nudPort).BeginInit();
             toolStrip1.SuspendLayout();
+            statusStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // tbAdresse
@@ -169,7 +172,7 @@
             toolStripButtonView.ImageTransparentColor = Color.Magenta;
             toolStripButtonView.Name = "toolStripButtonView";
             toolStripButtonView.Size = new Size(36, 40);
-            toolStripButtonView.Text = "View umschalten";
+            toolStripButtonView.Text = "Ausgabefenster umschalten";
             toolStripButtonView.Click += toolStripButtonView_Click;
             // 
             // toolStripButtonSave
@@ -181,6 +184,7 @@
             toolStripButtonSave.Name = "toolStripButtonSave";
             toolStripButtonSave.Size = new Size(36, 40);
             toolStripButtonSave.Text = "Verbindung speichern";
+            toolStripButtonSave.Click += toolStripButtonSave_Click;
             // 
             // richTextBoxAusgabe
             // 
@@ -188,16 +192,33 @@
             richTextBoxAusgabe.Location = new Point(4, 292);
             richTextBoxAusgabe.Margin = new Padding(8);
             richTextBoxAusgabe.Name = "richTextBoxAusgabe";
-            richTextBoxAusgabe.Size = new Size(1246, 361);
+            richTextBoxAusgabe.Size = new Size(1246, 329);
             richTextBoxAusgabe.TabIndex = 11;
             richTextBoxAusgabe.Text = "";
             richTextBoxAusgabe.Visible = false;
+            // 
+            // statusStrip1
+            // 
+            statusStrip1.ImageScalingSize = new Size(24, 24);
+            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel });
+            statusStrip1.Location = new Point(0, 629);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Size = new Size(1258, 32);
+            statusStrip1.TabIndex = 12;
+            statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel
+            // 
+            toolStripStatusLabel.Name = "toolStripStatusLabel";
+            toolStripStatusLabel.Size = new Size(56, 25);
+            toolStripStatusLabel.Text = "Bereit";
             // 
             // ConnectToBrokerControl
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BorderStyle = BorderStyle.FixedSingle;
+            Controls.Add(statusStrip1);
             Controls.Add(richTextBoxAusgabe);
             Controls.Add(toolStrip1);
             Controls.Add(label5);
@@ -216,6 +237,8 @@
             ((System.ComponentModel.ISupportInitialize)nudPort).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -237,5 +260,7 @@
         private ToolStripButton toolStripButtonView;
         private ToolStripButton toolStripButtonSave;
         private RichTextBox richTextBoxAusgabe;
+        private StatusStrip statusStrip1;
+        private ToolStripStatusLabel toolStripStatusLabel;
     }
 }

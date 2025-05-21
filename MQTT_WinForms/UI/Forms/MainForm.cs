@@ -1,4 +1,8 @@
+using MQTT_WinForms.DB;
+using MQTT_WinForms.DB.Objects;
+using MQTT_WinForms.Forms;
 using MQTT_WinForms.UI.Helpers;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
@@ -29,6 +33,32 @@ namespace MQTT_WinForms
             TabPage tabPage = TabHelper.NewConnectionTab();
             mainForm.tabControl.TabPages.Add(tabPage);
             mainForm.tabControl.SelectedTab = tabPage;
+        }
+
+        private async void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            using DataBaseContext context = new();
+
+            Connection? lastConnection = context.Connections
+                .AsEnumerable()
+                .OrderBy(x => Math.Abs((x.CreationTime - DateTime.Now).Ticks))
+                .FirstOrDefault();
+
+            if(lastConnection != null)
+            {
+                MainForm mainForm = TabHelper.GetMainForm(sender);
+                TabPage connectionTab = TabHelper.NewConnectionTab();
+
+                ConnectToBrokerControl? connectionControl = connectionTab.Controls.OfType<ConnectToBrokerControl>().FirstOrDefault();
+                if(connectionControl != null)
+                {
+                    connectionControl.SetConnection(lastConnection);
+                }
+               
+                mainForm.tabControl.TabPages.Add(connectionTab);
+                mainForm.tabControl.SelectedTab = connectionTab;
+            }
+
         }
     }
 }
