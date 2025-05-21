@@ -53,91 +53,83 @@
             // 
             // tbAdresse
             // 
-            tbAdresse.Location = new Point(191, 52);
-            tbAdresse.Margin = new Padding(4);
+            tbAdresse.Location = new Point(153, 42);
             tbAdresse.Name = "tbAdresse";
-            tbAdresse.Size = new Size(780, 31);
+            tbAdresse.Size = new Size(625, 27);
             tbAdresse.TabIndex = 0;
             // 
             // nudPort
             // 
-            nudPort.Location = new Point(191, 93);
-            nudPort.Margin = new Padding(4);
+            nudPort.Location = new Point(153, 74);
+            nudPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
             nudPort.Name = "nudPort";
-            nudPort.Size = new Size(781, 31);
+            nudPort.Size = new Size(625, 27);
             nudPort.TabIndex = 1;
             // 
             // tbClientId
             // 
-            tbClientId.Location = new Point(191, 134);
-            tbClientId.Margin = new Padding(4);
+            tbClientId.Location = new Point(153, 107);
             tbClientId.Name = "tbClientId";
-            tbClientId.Size = new Size(780, 31);
+            tbClientId.Size = new Size(625, 27);
             tbClientId.TabIndex = 2;
             // 
             // tbUsername
             // 
-            tbUsername.Location = new Point(191, 175);
-            tbUsername.Margin = new Padding(4);
+            tbUsername.Location = new Point(153, 140);
             tbUsername.Name = "tbUsername";
-            tbUsername.Size = new Size(780, 31);
+            tbUsername.Size = new Size(625, 27);
             tbUsername.TabIndex = 3;
             // 
             // tbPasswort
             // 
-            tbPasswort.Location = new Point(191, 216);
-            tbPasswort.Margin = new Padding(4);
+            tbPasswort.Location = new Point(153, 173);
             tbPasswort.Name = "tbPasswort";
-            tbPasswort.Size = new Size(780, 31);
+            tbPasswort.PasswordChar = '*';
+            tbPasswort.Size = new Size(625, 27);
             tbPasswort.TabIndex = 4;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(4, 55);
-            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Location = new Point(3, 44);
             label1.Name = "label1";
-            label1.Size = new Size(141, 25);
+            label1.Size = new Size(116, 20);
             label1.TabIndex = 5;
             label1.Text = "Broker-Adresse*";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(4, 95);
-            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Location = new Point(3, 76);
             label2.Name = "label2";
-            label2.Size = new Size(52, 25);
+            label2.Size = new Size(41, 20);
             label2.TabIndex = 6;
             label2.Text = "Port*";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(4, 138);
-            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Location = new Point(3, 110);
             label3.Name = "label3";
-            label3.Size = new Size(89, 25);
+            label3.Size = new Size(74, 20);
             label3.TabIndex = 7;
             label3.Text = "Client-ID*";
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(4, 179);
-            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Location = new Point(3, 143);
             label4.Name = "label4";
-            label4.Size = new Size(91, 25);
+            label4.Size = new Size(75, 20);
             label4.TabIndex = 8;
             label4.Text = "Username";
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(4, 220);
-            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Location = new Point(3, 176);
             label5.Name = "label5";
-            label5.Size = new Size(82, 25);
+            label5.Size = new Size(66, 20);
             label5.TabIndex = 9;
             label5.Text = "Passwort";
             // 
@@ -149,7 +141,7 @@
             toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonConnect, toolStripButtonView, toolStripButtonSave });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(1258, 45);
+            toolStrip1.Size = new Size(1006, 36);
             toolStrip1.TabIndex = 10;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -160,7 +152,7 @@
             toolStripButtonConnect.ImageScaling = ToolStripItemImageScaling.None;
             toolStripButtonConnect.ImageTransparentColor = Color.Magenta;
             toolStripButtonConnect.Name = "toolStripButtonConnect";
-            toolStripButtonConnect.Size = new Size(36, 40);
+            toolStripButtonConnect.Size = new Size(36, 33);
             toolStripButtonConnect.Text = "Connect";
             toolStripButtonConnect.Click += toolStripButtonConnect_Click;
             // 
@@ -171,8 +163,8 @@
             toolStripButtonView.ImageScaling = ToolStripItemImageScaling.None;
             toolStripButtonView.ImageTransparentColor = Color.Magenta;
             toolStripButtonView.Name = "toolStripButtonView";
-            toolStripButtonView.Size = new Size(36, 40);
-            toolStripButtonView.Text = "Ausgabefenster umschalten";
+            toolStripButtonView.Size = new Size(36, 33);
+            toolStripButtonView.Text = "View umschalten";
             toolStripButtonView.Click += toolStripButtonView_Click;
             // 
             // toolStripButtonSave
@@ -182,17 +174,18 @@
             toolStripButtonSave.ImageScaling = ToolStripItemImageScaling.None;
             toolStripButtonSave.ImageTransparentColor = Color.Magenta;
             toolStripButtonSave.Name = "toolStripButtonSave";
-            toolStripButtonSave.Size = new Size(36, 40);
+            toolStripButtonSave.Size = new Size(36, 33);
             toolStripButtonSave.Text = "Verbindung speichern";
             toolStripButtonSave.Click += toolStripButtonSave_Click;
             // 
             // richTextBoxAusgabe
             // 
             richTextBoxAusgabe.BorderStyle = BorderStyle.FixedSingle;
-            richTextBoxAusgabe.Location = new Point(4, 292);
-            richTextBoxAusgabe.Margin = new Padding(8);
+            richTextBoxAusgabe.Location = new Point(0, 209);
+            richTextBoxAusgabe.Margin = new Padding(6);
             richTextBoxAusgabe.Name = "richTextBoxAusgabe";
-            richTextBoxAusgabe.Size = new Size(1246, 329);
+            richTextBoxAusgabe.ReadOnly = true;
+            richTextBoxAusgabe.Size = new Size(1006, 320);
             richTextBoxAusgabe.TabIndex = 11;
             richTextBoxAusgabe.Text = "";
             richTextBoxAusgabe.Visible = false;
@@ -215,7 +208,7 @@
             // 
             // ConnectToBrokerControl
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BorderStyle = BorderStyle.FixedSingle;
             Controls.Add(statusStrip1);
@@ -231,9 +224,8 @@
             Controls.Add(tbClientId);
             Controls.Add(nudPort);
             Controls.Add(tbAdresse);
-            Margin = new Padding(4);
             Name = "ConnectToBrokerControl";
-            Size = new Size(1258, 661);
+            Size = new Size(1006, 529);
             ((System.ComponentModel.ISupportInitialize)nudPort).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();

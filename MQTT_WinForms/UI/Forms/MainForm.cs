@@ -2,9 +2,6 @@ using MQTT_WinForms.DB;
 using MQTT_WinForms.DB.Objects;
 using MQTT_WinForms.Forms;
 using MQTT_WinForms.UI.Helpers;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace MQTT_WinForms
 {
