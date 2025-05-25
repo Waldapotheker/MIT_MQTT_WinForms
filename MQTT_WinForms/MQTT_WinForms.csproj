@@ -19,6 +19,7 @@
     <None Remove="UI\Icons\Icon_Save.png" />
     <None Remove="UI\Icons\Icon_Trash.png" />
     <None Remove="UI\Icons\Icon_Window.png" />
+    <None Remove="UI\Icons\MQTT_Image.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +33,7 @@
     <EmbeddedResource Include="UI\Icons\Icon_Save.png" />
     <EmbeddedResource Include="UI\Icons\Icon_Trash.png" />
     <EmbeddedResource Include="UI\Icons\Icon_Window.png" />
+    <EmbeddedResource Include="UI\Icons\MQTT_Image.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,6 +59,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
 
 </Project>

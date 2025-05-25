@@ -1,4 +1,5 @@
-﻿using MQTT_WinForms.Forms;
+﻿using Microsoft.VisualBasic.ApplicationServices;
+using MQTT_WinForms.Forms;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
@@ -21,9 +22,10 @@ namespace MQTT_WinForms.UI.Helpers
         {
             if (tabPage == null)
                 tabPage = new TabPage();
-
             tabPage.Text = "Willkommen";
             WelcomeControl welcomeControl = new WelcomeControl();
+            welcomeControl.BackgroundImage = Properties.Resources.MQTT_Image;
+            welcomeControl.BackgroundImageLayout = ImageLayout.Stretch; 
             welcomeControl.Dock = DockStyle.Fill;
             welcomeControl.Size = tabPage.Size;
             welcomeControl.Parent = tabPage;
