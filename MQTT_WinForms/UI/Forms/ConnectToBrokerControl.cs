@@ -1,6 +1,9 @@
 ﻿using MQTT_WinForms.BASE;
 using MQTT_WinForms.DB;
 using MQTT_WinForms.DB.Objects;
+using MQTT_WinForms.MQTT;
+using MQTTnet;
+using static MQTT_WinForms.MQTT.MqttClientHelper;
 
 namespace MQTT_WinForms.Forms
 {
@@ -28,7 +31,25 @@ namespace MQTT_WinForms.Forms
                 Password = tbPasswort.Text,
             };
 
-            await MQTT.MqttClient.ConnectToMqttServer(connectionData);
+            
+            try
+            {
+                MQTTWrapper wrapper = MqttClientHelper.ConnectToMqttServer(connectionData);
+                Task<MqttClientConnectResult> result = wrapper.Client.ConnectAsync(wrapper.Options);
+
+                if (result.IsFaulted)
+                    throw result.Exception;
+                Connections.ActiveConnections.Add(result);
+                MessageBox.Show($"{Connections.ActiveConnections.Count} aktive Verbindungen");
+                toolStripStatusLabel.Text = "Verbindung hergestellt!";
+                
+            }
+            catch (Exception ex)
+            {
+                toolStripStatusLabel.Text = "Verbindung nicht möglich!\n" + ex.Message;
+            }
+            
+            
         }
 
         private void toolStripButtonView_Click(object sender, EventArgs e)
