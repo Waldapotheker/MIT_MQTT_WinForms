@@ -2,6 +2,7 @@
 using MQTT_WinForms.DB;
 using MQTT_WinForms.DB.Objects;
 using MQTT_WinForms.MQTT;
+using MQTT_WinForms.UI.Forms;
 
 namespace MQTT_WinForms.Forms
 {
@@ -148,6 +149,15 @@ namespace MQTT_WinForms.Forms
             else
             {
                 toolStripStatusLabel.Text = "Das Eingabefeld ist leer!";
+            }
+        }
+
+        private void toolStripButtonTopic_Click(object sender, EventArgs e)
+        {
+            string topic = InputBox.Show("Topic eingeben:");
+            if (Wrapper != null && topic != string.Empty)
+            {
+                Wrapper.SubscribeAsync(topic);
             }
         }
     }
