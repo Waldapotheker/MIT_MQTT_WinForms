@@ -20,12 +20,44 @@ namespace MQTT_WinForms.Forms
 
             richTextBoxAusgabe.Dock = DockStyle.Fill;
             textBoxInput.Dock = DockStyle.Bottom;
-
         }
+
+        private async Task<bool> Connect(MQTTWrapper wrapper)
+        {
+            TaskCompletionSource<bool> tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            wrapper.Connected += (sender, args) =>
+            {
+                tcs.TrySetResult(true);
+            };
+
+            var status = await wrapper.ConnectAsync();
+
+            if(status != MqttClientHelper.Status.Success)
+            {
+                tcs.TrySetResult(false);
+            }
+
+            Task completion = await Task.WhenAny(tcs.Task, Task.Delay(wrapper!.Options!.Timeout));
+
+            if(completion == tcs.Task)
+            {
+                return await tcs.Task;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
 
         private async void toolStripButtonConnect_Click(object sender, EventArgs e)
         {
             toolStripProgressBar.Value = 25;
+            toolStripStatusLabel.Text = "Verbinde...";
+
+       
             ConnectionData connectionData = new()
             {
                 Address = tbAdresse.Text,
@@ -35,21 +67,22 @@ namespace MQTT_WinForms.Forms
                 Password = tbPasswort.Text,
             };
             toolStripProgressBar.Value = 60;
-            try
+  
+            Wrapper = MqttClientHelper.Setup(connectionData);
+            if (Wrapper != null)
             {
-                Wrapper = MqttClientHelper.Setup(connectionData);
-                if (Wrapper != null)
+                bool result = await Connect(Wrapper);
+                if(result)
                 {
-                    var status = await Wrapper.ConnectAsync();
                     toolStripStatusLabel.Text = "Verbindung erfolgreich!";
-                    toolStripProgressBar.Value = 100;
+                    toolStripProgressBar.BackColor = Color.Green;
                 }
-                toolStripProgressBar.Value = 0;
-            }
-            catch (Exception ex)
-            {
-                toolStripStatusLabel.Text = ex.Message;
-                toolStripProgressBar.Value = 0;
+                else
+                {
+                    toolStripStatusLabel.Text = "Keine Verbindung möglich!";
+                    toolStripProgressBar.BackColor = Color.Red;
+                }
+                toolStripProgressBar.Value = 100;
             }
         }
 

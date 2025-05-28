@@ -55,11 +55,11 @@ namespace MQTT_WinForms.MQTT
 
         public MqttClientOptions? Options { get; set; }
 
-        public EventHandler<MessageEventArgs>? RecieveMessage;
+        public event EventHandler<MessageEventArgs>? RecieveMessage;
 
-        public EventHandler<EventArgs>? Disconnected;
+        public event EventHandler<EventArgs>? Disconnected;
 
-        public EventHandler<EventArgs>? Connected;
+        public event EventHandler<EventArgs>? Connected;
 
         public class MessageEventArgs: EventArgs
         {
@@ -80,20 +80,26 @@ namespace MQTT_WinForms.MQTT
                 return Status.AlreadyConnected;
             }
 
-            
-            MqttClientConnectResult connectionResult = await Client.ConnectAsync(Options);
-            return connectionResult.ResultCode switch
+            try
             {
-                MqttClientConnectResultCode.Success => Status.Success,
-                MqttClientConnectResultCode.ClientIdentifierNotValid => Status.InvalidID,
-                MqttClientConnectResultCode.BadUserNameOrPassword => Status.InvalidUserOrPassword,
-                MqttClientConnectResultCode.ServerUnavailable
-                or MqttClientConnectResultCode.ServerBusy
-                or MqttClientConnectResultCode.UseAnotherServer => Status.ServerUnavailiable,
+                MqttClientConnectResult connectionResult = await Client.ConnectAsync(Options);
+                return connectionResult.ResultCode switch
+                {
+                    MqttClientConnectResultCode.Success => Status.Success,
+                    MqttClientConnectResultCode.ClientIdentifierNotValid => Status.InvalidID,
+                    MqttClientConnectResultCode.BadUserNameOrPassword => Status.InvalidUserOrPassword,
+                    MqttClientConnectResultCode.ServerUnavailable
+                    or MqttClientConnectResultCode.ServerBusy
+                    or MqttClientConnectResultCode.UseAnotherServer => Status.ServerUnavailiable,
 
-                MqttClientConnectResultCode.Banned => Status.Banned,
-                _ => Status.UnspecifiedError,
-            };
+                    MqttClientConnectResultCode.Banned => Status.Banned,
+                    _ => Status.UnspecifiedError,
+                };
+            }
+            catch (Exception e)
+            {
+                return e is OperationCanceledException ? Status.TimedOut : Status.UnspecifiedError;
+            }
         }
 
         public async Task<Status> PublishAsync(string topic, string payload, bool retain = false, MqttQualityOfServiceLevel qos = MqttQualityOfServiceLevel.AtLeastOnce)

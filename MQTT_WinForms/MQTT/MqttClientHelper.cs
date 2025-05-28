@@ -17,6 +17,7 @@ namespace MQTT_WinForms.MQTT
             NoConnection = 201,
             AlreadyConnected = 202,
             Unauthorized = 203,
+            TimedOut = 204,
      
             InvalidID = 301,
             InvalidUserOrPassword = 302,
@@ -68,6 +69,7 @@ namespace MQTT_WinForms.MQTT
                 .WithClientId(connectionData.ClientID)
                 .WithTcpServer(connectionData.Address, connectionData.Port)
                 .WithCleanSession()
+                .WithTimeout(TimeSpan.FromSeconds(5))
                 .WithKeepAlivePeriod(TimeSpan.FromSeconds(60));
 
             if (!string.IsNullOrEmpty(connectionData.Username))
