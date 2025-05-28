@@ -56,7 +56,7 @@
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.RenderMode = ToolStripRenderMode.Professional;
-            toolStrip.Size = new Size(1142, 45);
+            toolStrip.Size = new Size(914, 36);
             toolStrip.Stretch = true;
             toolStrip.TabIndex = 1;
             toolStrip.Text = "toolStrip1";
@@ -69,13 +69,13 @@
             toolStripDropDownButton1.ImageScaling = ToolStripItemImageScaling.None;
             toolStripDropDownButton1.ImageTransparentColor = Color.Magenta;
             toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            toolStripDropDownButton1.Size = new Size(50, 40);
+            toolStripDropDownButton1.Size = new Size(46, 33);
             toolStripDropDownButton1.Text = "Neu";
             // 
             // newConnectionToolStripMenuItem
             // 
             newConnectionToolStripMenuItem.Name = "newConnectionToolStripMenuItem";
-            newConnectionToolStripMenuItem.Size = new Size(258, 34);
+            newConnectionToolStripMenuItem.Size = new Size(213, 26);
             newConnectionToolStripMenuItem.Text = "Connect To Broker";
             newConnectionToolStripMenuItem.Click += NewConnectionToolStripMenuItem_Click;
             // 
@@ -85,7 +85,7 @@
             toolStripButton1.Image = (Image)resources.GetObject("toolStripButton1.Image");
             toolStripButton1.ImageTransparentColor = Color.Magenta;
             toolStripButton1.Name = "toolStripButton1";
-            toolStripButton1.Size = new Size(34, 40);
+            toolStripButton1.Size = new Size(29, 33);
             toolStripButton1.Text = "toolStripButton1";
             toolStripButton1.Click += toolStripButton1_Click;
             // 
@@ -96,7 +96,7 @@
             stripButtonCloseTab.ImageScaling = ToolStripItemImageScaling.None;
             stripButtonCloseTab.ImageTransparentColor = Color.Magenta;
             stripButtonCloseTab.Name = "stripButtonCloseTab";
-            stripButtonCloseTab.Size = new Size(36, 40);
+            stripButtonCloseTab.Size = new Size(36, 33);
             stripButtonCloseTab.Text = "Schließen";
             stripButtonCloseTab.Click += StripButtonCloseTab_Click;
             // 
@@ -104,22 +104,23 @@
             // 
             tabControl.Dock = DockStyle.Fill;
             tabControl.HotTrack = true;
-            tabControl.Location = new Point(0, 45);
+            tabControl.Location = new Point(0, 36);
             tabControl.Margin = new Padding(0);
             tabControl.Name = "tabControl";
             tabControl.Padding = new Point(0, 0);
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(1142, 705);
+            tabControl.Size = new Size(914, 564);
             tabControl.TabIndex = 2;
             // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1142, 750);
+            ClientSize = new Size(914, 600);
             Controls.Add(tabControl);
             Controls.Add(toolStrip);
-            Margin = new Padding(4, 5, 4, 5);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(3, 4, 3, 4);
             Name = "MainForm";
             Text = "MQTT Client";
             toolStrip.ResumeLayout(false);
