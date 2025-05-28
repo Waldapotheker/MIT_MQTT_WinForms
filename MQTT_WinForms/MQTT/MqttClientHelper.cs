@@ -5,35 +5,77 @@ namespace MQTT_WinForms.MQTT
 {
     public static class MqttClientHelper
     {
-        public class MQTTWrapper
+        public enum Status
         {
-            public IMqttClient? Client { get; set; }
+            Success = 100,
+            QoS0Grant = 101,
+            QoS1Grant = 102,
+            QoS2Grant = 103,
 
-            public MqttClientOptions? Options { get; set; }
+            NotInitialized = 200,
+            NoConnection = 201,
+            AlreadyConnected = 202,
+            Unauthorized = 203,
+     
+            InvalidID = 301,
+            InvalidUserOrPassword = 302,
+            ServerUnavailiable = 303,
+            Banned = 304,
+
+            NoMatchingSubscribers = 401,
+            InvalidTopic = 402,
+            PacketIDInUse = 403,
+            QuotaExceeded = 404,
+
+            NotSupported = 501,
+
+            UnspecifiedError = 600,
         }
 
-        public static MQTTWrapper ConnectToMqttServer(ConnectionData connectionData)
+        public struct Subscription
+        {
+            public string Topic;
+
+            public Status Status;
+        }
+
+        public struct SubscriptionResult
+        {
+            public SubscriptionResult()
+            {
+                Subscriptions = [];
+            }
+
+            public SubscriptionResult(Status status)
+            {
+                Subscriptions = [];
+                Subscriptions.Add(new Subscription
+                {
+                    Topic = "Unknown",
+                    Status = status
+                });
+            }
+
+            public List<Subscription> Subscriptions { get; set; }
+        }
+
+        public static MQTTWrapper Setup(ConnectionData connectionData)
         {
             #region Verbindungsinformationen übernehmen
-            var options = new MqttClientOptionsBuilder();
-            if (connectionData.Username != null || connectionData.Username != string.Empty)
-            {
-                options
-                .WithClientId(connectionData.ClientID)
-                .WithTcpServer(connectionData.Address, connectionData.Port)
-                .WithCredentials(connectionData.Username, connectionData.Password)
-                .WithCleanSession()
-                .Build();
-            }
-            else
-            {
 
-                options
+            MqttClientOptionsBuilder optionsBuilder = new MqttClientOptionsBuilder()
                 .WithClientId(connectionData.ClientID)
                 .WithTcpServer(connectionData.Address, connectionData.Port)
                 .WithCleanSession()
-                .Build();
+                .WithKeepAlivePeriod(TimeSpan.FromSeconds(60));
+
+            if (!string.IsNullOrEmpty(connectionData.Username))
+            {
+                optionsBuilder = optionsBuilder.WithCredentials(connectionData.Username, connectionData.Password);
             }
+
+            MqttClientOptions options = optionsBuilder.Build();
+
             #endregion
 
             MqttClientFactory mqttFactory = new MqttClientFactory();
@@ -42,12 +84,8 @@ namespace MQTT_WinForms.MQTT
             return new MQTTWrapper
             {
                 Client = mqttClient,
-                Options = options.Build()
+                Options = options
             };
-            
-
-
         }
-
     }
 }

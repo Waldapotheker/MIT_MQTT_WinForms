@@ -2,13 +2,13 @@
 using MQTT_WinForms.DB;
 using MQTT_WinForms.DB.Objects;
 using MQTT_WinForms.MQTT;
-using MQTTnet;
-using static MQTT_WinForms.MQTT.MqttClientHelper;
 
 namespace MQTT_WinForms.Forms
 {
     public partial class ConnectToBrokerControl : UserControl
     {
+        public MQTTWrapper? Wrapper { get; private set; }
+
         public ConnectToBrokerControl()
         {
             InitializeComponent();
@@ -20,9 +20,9 @@ namespace MQTT_WinForms.Forms
             richTextBoxAusgabe.Dock = DockStyle.Fill;
         }
 
-        private async void toolStripButtonConnect_Click(object sender, EventArgs e)
+        private void toolStripButtonConnect_Click(object sender, EventArgs e)
         {
-            ConnectionData connectionData = new ConnectionData()
+            ConnectionData connectionData = new()
             {
                 Address = tbAdresse.Text,
                 Port = Convert.ToInt32(nudPort.Value),
@@ -31,25 +31,7 @@ namespace MQTT_WinForms.Forms
                 Password = tbPasswort.Text,
             };
 
-            
-            try
-            {
-                MQTTWrapper wrapper = MqttClientHelper.ConnectToMqttServer(connectionData);
-                Task<MqttClientConnectResult> result = wrapper.Client.ConnectAsync(wrapper.Options);
-
-                if (result.IsFaulted)
-                    throw result.Exception;
-                Connections.ActiveConnections.Add(result);
-                MessageBox.Show($"{Connections.ActiveConnections.Count} aktive Verbindungen");
-                toolStripStatusLabel.Text = "Verbindung hergestellt!";
-                
-            }
-            catch (Exception ex)
-            {
-                toolStripStatusLabel.Text = "Verbindung nicht möglich!\n" + ex.Message;
-            }
-            
-            
+            Wrapper = MqttClientHelper.Setup(connectionData);
         }
 
         private void toolStripButtonView_Click(object sender, EventArgs e)
