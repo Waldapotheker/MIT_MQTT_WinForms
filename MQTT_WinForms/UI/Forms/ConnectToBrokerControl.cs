@@ -2,6 +2,7 @@
 using MQTT_WinForms.DB;
 using MQTT_WinForms.DB.Objects;
 using MQTT_WinForms.MQTT;
+using MQTT_WinForms.UI.Forms;
 
 namespace MQTT_WinForms.Forms
 {
@@ -20,7 +21,6 @@ namespace MQTT_WinForms.Forms
 
             richTextBoxAusgabe.Dock = DockStyle.Fill;
             textBoxInput.Dock = DockStyle.Bottom;
-
         }
 
         private async void toolStripButtonConnect_Click(object sender, EventArgs e)
@@ -45,6 +45,8 @@ namespace MQTT_WinForms.Forms
                     toolStripProgressBar.Value = 100;
                 }
                 toolStripProgressBar.Value = 0;
+                toolStripButtonView_Click(sender, e);
+
             }
             catch (Exception ex)
             {
@@ -115,6 +117,15 @@ namespace MQTT_WinForms.Forms
             else
             {
                 toolStripStatusLabel.Text = "Das Eingabefeld ist leer!";
+            }
+        }
+
+        private void toolStripButtonTopic_Click(object sender, EventArgs e)
+        {
+            string topic = InputBox.Show("Topic eingeben:");
+            if (Wrapper != null && topic != string.Empty)
+            {
+                Wrapper.SubscribeAsync(topic);
             }
         }
     }

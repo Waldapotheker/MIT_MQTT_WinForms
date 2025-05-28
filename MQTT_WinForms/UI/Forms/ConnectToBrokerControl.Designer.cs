@@ -43,12 +43,13 @@
             toolStripButtonConnect = new ToolStripButton();
             toolStripButtonView = new ToolStripButton();
             toolStripButtonSave = new ToolStripButton();
+            toolStripButtonSend = new ToolStripButton();
             richTextBoxAusgabe = new RichTextBox();
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel = new ToolStripStatusLabel();
             toolStripProgressBar = new ToolStripProgressBar();
             textBoxInput = new TextBox();
-            toolStripButtonSend = new ToolStripButton();
+            toolStripButtonTopic = new ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)nudPort).BeginInit();
             toolStrip1.SuspendLayout();
             statusStrip1.SuspendLayout();
@@ -141,7 +142,7 @@
             toolStrip1.AutoSize = false;
             toolStrip1.GripStyle = ToolStripGripStyle.Hidden;
             toolStrip1.ImageScalingSize = new Size(20, 20);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonConnect, toolStripButtonView, toolStripButtonSave, toolStripButtonSend });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonConnect, toolStripButtonView, toolStripButtonSave, toolStripButtonSend, toolStripButtonTopic });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(1006, 36);
@@ -181,14 +182,24 @@
             toolStripButtonSave.Text = "Verbindung speichern";
             toolStripButtonSave.Click += toolStripButtonSave_Click;
             // 
+            // toolStripButtonSend
+            // 
+            toolStripButtonSend.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripButtonSend.Image = (Image)resources.GetObject("toolStripButtonSend.Image");
+            toolStripButtonSend.ImageTransparentColor = Color.Magenta;
+            toolStripButtonSend.Name = "toolStripButtonSend";
+            toolStripButtonSend.Size = new Size(29, 33);
+            toolStripButtonSend.Text = "Senden";
+            toolStripButtonSend.Click += toolStripButtonSend_Click;
+            // 
             // richTextBoxAusgabe
             // 
             richTextBoxAusgabe.BorderStyle = BorderStyle.FixedSingle;
-            richTextBoxAusgabe.Location = new Point(0, 209);
+            richTextBoxAusgabe.Location = new Point(0, 279);
             richTextBoxAusgabe.Margin = new Padding(6, 5, 6, 5);
             richTextBoxAusgabe.Name = "richTextBoxAusgabe";
             richTextBoxAusgabe.ReadOnly = true;
-            richTextBoxAusgabe.Size = new Size(1006, 219);
+            richTextBoxAusgabe.Size = new Size(1006, 149);
             richTextBoxAusgabe.TabIndex = 11;
             richTextBoxAusgabe.Text = "";
             richTextBoxAusgabe.Visible = false;
@@ -225,15 +236,15 @@
             textBoxInput.TabIndex = 13;
             textBoxInput.Visible = false;
             // 
-            // toolStripButtonSend
+            // toolStripButtonTopic
             // 
-            toolStripButtonSend.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripButtonSend.Image = (Image)resources.GetObject("toolStripButtonSend.Image");
-            toolStripButtonSend.ImageTransparentColor = Color.Magenta;
-            toolStripButtonSend.Name = "toolStripButtonSend";
-            toolStripButtonSend.Size = new Size(29, 33);
-            toolStripButtonSend.Text = "Senden";
-            toolStripButtonSend.Click += toolStripButtonSend_Click;
+            toolStripButtonTopic.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripButtonTopic.Image = (Image)resources.GetObject("toolStripButtonTopic.Image");
+            toolStripButtonTopic.ImageTransparentColor = Color.Magenta;
+            toolStripButtonTopic.Name = "toolStripButtonTopic";
+            toolStripButtonTopic.Size = new Size(29, 33);
+            toolStripButtonTopic.Text = "Topic auswählen";
+            toolStripButtonTopic.Click += toolStripButtonTopic_Click;
             // 
             // ConnectToBrokerControl
             // 
@@ -287,5 +298,6 @@
         private ToolStripProgressBar toolStripProgressBar;
         private TextBox textBoxInput;
         private ToolStripButton toolStripButtonSend;
+        private ToolStripButton toolStripButtonTopic;
     }
 }
