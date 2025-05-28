@@ -1,11 +1,14 @@
 ﻿using MQTT_WinForms.BASE;
 using MQTT_WinForms.DB;
 using MQTT_WinForms.DB.Objects;
+using MQTT_WinForms.MQTT;
 
 namespace MQTT_WinForms.Forms
 {
     public partial class ConnectToBrokerControl : UserControl
     {
+        public MQTTWrapper? Wrapper { get; private set; }
+
         public ConnectToBrokerControl()
         {
             InitializeComponent();
@@ -17,9 +20,9 @@ namespace MQTT_WinForms.Forms
             richTextBoxAusgabe.Dock = DockStyle.Fill;
         }
 
-        private async void toolStripButtonConnect_Click(object sender, EventArgs e)
+        private void toolStripButtonConnect_Click(object sender, EventArgs e)
         {
-            ConnectionData connectionData = new ConnectionData()
+            ConnectionData connectionData = new()
             {
                 Address = tbAdresse.Text,
                 Port = Convert.ToInt32(nudPort.Value),
@@ -28,7 +31,7 @@ namespace MQTT_WinForms.Forms
                 Password = tbPasswort.Text,
             };
 
-            await MQTT.MqttClient.ConnectToMqttServer(connectionData);
+            Wrapper = MqttClientHelper.Setup(connectionData);
         }
 
         private void toolStripButtonView_Click(object sender, EventArgs e)
