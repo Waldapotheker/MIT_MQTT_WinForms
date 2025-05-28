@@ -9,6 +9,7 @@ namespace MQTT_WinForms.Forms
     public partial class ConnectToBrokerControl : UserControl
     {
         public MQTTWrapper? Wrapper { get; private set; }
+        public string Topic { get; private set; } = "default";
 
         public ConnectToBrokerControl()
         {
@@ -51,6 +52,33 @@ namespace MQTT_WinForms.Forms
             }
         }
 
+        private async Task<bool> TryPublish(string text)
+        {
+            TaskCompletionSource<bool> tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            var status = await Wrapper!.PublishAsync(Topic, text);
+
+            if (status != MqttClientHelper.Status.Success)
+            {
+                tcs.TrySetResult(false);
+            }
+            else
+            {
+                tcs.TrySetResult(true);
+            }
+
+            Task completion = await Task.WhenAny(tcs.Task, Task.Delay(Wrapper!.Options!.Timeout));
+
+            if (completion == tcs.Task)
+            {
+                return await tcs.Task;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
 
         private async void toolStripButtonConnect_Click(object sender, EventArgs e)
@@ -77,6 +105,7 @@ namespace MQTT_WinForms.Forms
                 {
                     toolStripStatusLabel.Text = "Verbindung erfolgreich!";
                     toolStripProgressBar.BackColor = Color.Green;
+                    toolStripButtonView_Click(null, null);
                 }
                 else
                 {
@@ -140,24 +169,36 @@ namespace MQTT_WinForms.Forms
             tbPasswort.Text = connection.Password;
         }
 
-        private void toolStripButtonSend_Click(object sender, EventArgs e)
+        private async void toolStripButtonSend_Click(object sender, EventArgs e)
         {
-            if (textBoxInput.Text != string.Empty)
+            if (!string.IsNullOrEmpty(textBoxInput.Text))
             {
+                bool result = await TryPublish(textBoxInput.Text);
 
+                if (result)
+                {
+                    toolStripStatusLabel.Text = "Erfolgreich gesendet";
+                }
+                else
+                {
+                    toolStripStatusLabel.Text = "Fehler beim Senden";
+                }
             }
             else
             {
-                toolStripStatusLabel.Text = "Das Eingabefeld ist leer!";
+                toolStripStatusLabel.Text = "Das Eingabefeld ist leer";
             }
         }
 
-        private void toolStripButtonTopic_Click(object sender, EventArgs e)
+
+
+        private async void toolStripButtonTopic_Click(object sender, EventArgs e)
         {
             string topic = InputBox.Show("Topic eingeben:");
             if (Wrapper != null && topic != string.Empty)
             {
-                Wrapper.SubscribeAsync(topic);
+                Topic = topic;
+                await Wrapper.SubscribeAsync(Topic);
             }
         }
     }
