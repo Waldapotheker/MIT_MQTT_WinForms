@@ -2,14 +2,71 @@
 using MQTTnet;
 
 using static MQTT_WinForms.MQTT.MqttClientHelper;
+using System.Text;
 
 namespace MQTT_WinForms.MQTT
 {
     public class MQTTWrapper
     {
+        public void Initialize()
+        {
+            if(Client == null)
+            {
+                throw new ArgumentNullException(nameof(Client));
+            }
+            
+            if(Options == null)
+            {
+                throw new ArgumentNullException(nameof(Options));
+            }
+
+            Client.ApplicationMessageReceivedAsync += Client_ApplicationMessageReceivedAsync;
+            Client.ConnectedAsync += Client_ConnectedAsync;
+            Client.DisconnectedAsync += Client_DisconnectedAsync;
+        }
+
+        private Task Client_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
+        {
+            Disconnected?.Invoke(this, new EventArgs());
+            return Task.CompletedTask;
+        }
+
+        private Task Client_ConnectedAsync(MqttClientConnectedEventArgs arg)
+        {
+            Connected?.Invoke(this, new EventArgs());
+            return Task.CompletedTask;
+        }
+
+        private Task Client_ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
+        {
+            var topic = arg.ApplicationMessage.Topic;
+            var payload = Encoding.UTF8.GetString(arg.ApplicationMessage.Payload);
+
+            RecieveMessage?.Invoke(this, new MessageEventArgs()
+            {
+                Topic = topic,
+                Message = payload
+            });
+
+            return Task.CompletedTask;
+        }
+
         public IMqttClient? Client { get; set; }
 
         public MqttClientOptions? Options { get; set; }
+
+        public EventHandler<MessageEventArgs>? RecieveMessage;
+
+        public EventHandler<EventArgs>? Disconnected;
+
+        public EventHandler<EventArgs>? Connected;
+
+        public class MessageEventArgs: EventArgs
+        {
+            public string Topic { get; set; }
+
+            public string Message { get; set; }
+        }
 
         public async Task<Status> ConnectAsync()
         {
@@ -23,6 +80,7 @@ namespace MQTT_WinForms.MQTT
                 return Status.AlreadyConnected;
             }
 
+            
             MqttClientConnectResult connectionResult = await Client.ConnectAsync(Options);
             return connectionResult.ResultCode switch
             {

@@ -1,5 +1,6 @@
 ﻿using MQTT_WinForms.BASE;
 using MQTTnet;
+using System.Linq.Expressions;
 
 namespace MQTT_WinForms.MQTT
 {
@@ -78,14 +79,18 @@ namespace MQTT_WinForms.MQTT
 
             #endregion
 
-            MqttClientFactory mqttFactory = new MqttClientFactory();
+            MqttClientFactory mqttFactory = new();
             IMqttClient mqttClient = mqttFactory.CreateMqttClient();
 
-            return new MQTTWrapper
+            MQTTWrapper wrapper = new()
             {
                 Client = mqttClient,
                 Options = options
             };
+
+            wrapper.Initialize();
+
+            return wrapper;
         }
     }
 }
