@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <StartupObject>MQTT_WinForms.BASE.Program</StartupObject>
+    <ApplicationIcon>UI\Icons\MQTT_Image.ico</ApplicationIcon>
+    <AssemblyName>WinMQTT</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +23,10 @@
     <None Remove="UI\Icons\Icon_Trash.png" />
     <None Remove="UI\Icons\Icon_Window.png" />
     <None Remove="UI\Icons\MQTT_Image.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="UI\Icons\MQTT_Image.ico" />
   </ItemGroup>
 
   <ItemGroup>
