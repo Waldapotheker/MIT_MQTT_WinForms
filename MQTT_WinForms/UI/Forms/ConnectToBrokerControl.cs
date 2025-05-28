@@ -17,11 +17,15 @@ namespace MQTT_WinForms.Forms
             nudPort.Maximum = 65535;
             nudPort.Value = 1883;
             tbClientId.Text = "default";
+
             richTextBoxAusgabe.Dock = DockStyle.Fill;
+            textBoxInput.Dock = DockStyle.Bottom;
+
         }
 
-        private void toolStripButtonConnect_Click(object sender, EventArgs e)
+        private async void toolStripButtonConnect_Click(object sender, EventArgs e)
         {
+            toolStripProgressBar.Value = 25;
             ConnectionData connectionData = new()
             {
                 Address = tbAdresse.Text,
@@ -30,16 +34,37 @@ namespace MQTT_WinForms.Forms
                 Username = tbUsername.Text,
                 Password = tbPasswort.Text,
             };
-
-            Wrapper = MqttClientHelper.Setup(connectionData);
+            toolStripProgressBar.Value = 60;
+            try
+            {
+                Wrapper = MqttClientHelper.Setup(connectionData);
+                if (Wrapper != null)
+                {
+                    var status = await Wrapper.ConnectAsync();
+                    toolStripStatusLabel.Text = "Verbindung erfolgreich!";
+                    toolStripProgressBar.Value = 100;
+                }
+                toolStripProgressBar.Value = 0;
+            }
+            catch (Exception ex)
+            {
+                toolStripStatusLabel.Text = ex.Message;
+                toolStripProgressBar.Value = 0;
+            }
         }
 
         private void toolStripButtonView_Click(object sender, EventArgs e)
         {
             if (!richTextBoxAusgabe.Visible)
+            {
                 richTextBoxAusgabe.Visible = true;
+                textBoxInput.Visible = true;
+            }
             else
+            {
                 richTextBoxAusgabe.Visible = false;
+                textBoxInput.Visible = false;
+            }
 
 
         }
@@ -79,6 +104,18 @@ namespace MQTT_WinForms.Forms
             tbClientId.Text = connection.Topic;
             tbUsername.Text = connection.Username;
             tbPasswort.Text = connection.Password;
+        }
+
+        private void toolStripButtonSend_Click(object sender, EventArgs e)
+        {
+            if (textBoxInput.Text != string.Empty)
+            {
+
+            }
+            else
+            {
+                toolStripStatusLabel.Text = "Das Eingabefeld ist leer!";
+            }
         }
     }
 }
