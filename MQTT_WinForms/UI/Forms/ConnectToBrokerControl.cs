@@ -83,6 +83,9 @@ namespace MQTT_WinForms.Forms
 
         private async void toolStripButtonConnect_Click(object sender, EventArgs e)
         {
+            MainForm form = (MainForm)ParentForm;
+            form.tabControl.SelectedTab.Text = tbAdresse.Text;
+
             toolStripProgressBar.Value = 25;
             toolStripStatusLabel.Text = "Verbinde...";
 
@@ -178,6 +181,7 @@ namespace MQTT_WinForms.Forms
                 if (result)
                 {
                     toolStripStatusLabel.Text = "Erfolgreich gesendet";
+                    textBoxInput.Text = string.Empty;
                 }
                 else
                 {

@@ -134,7 +134,7 @@
         private ToolStrip toolStrip;
         private ToolStripDropDownButton toolStripDropDownButton1;
         private ToolStripMenuItem newConnectionToolStripMenuItem;
-        private TabControl tabControl;
+        public TabControl tabControl;
         private ToolStripButton stripButtonCloseTab;
         private ToolStripButton toolStripButton1;
     }
