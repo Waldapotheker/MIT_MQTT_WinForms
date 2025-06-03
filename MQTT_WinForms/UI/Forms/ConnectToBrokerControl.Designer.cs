@@ -153,7 +153,7 @@
             // 
             toolStripButtonConnect.DisplayStyle = ToolStripItemDisplayStyle.Image;
             toolStripButtonConnect.Image = (Image)resources.GetObject("toolStripButtonConnect.Image");
-            toolStripButtonConnect.ImageScaling = ToolStripItemImageScaling.None;
+            toolStripButtonConnect.ImageScaling = ToolStripItemImageScaling.SizeToFit;
             toolStripButtonConnect.ImageTransparentColor = Color.Magenta;
             toolStripButtonConnect.Name = "toolStripButtonConnect";
             toolStripButtonConnect.Size = new Size(36, 33);
@@ -164,7 +164,7 @@
             // 
             toolStripButtonView.DisplayStyle = ToolStripItemDisplayStyle.Image;
             toolStripButtonView.Image = (Image)resources.GetObject("toolStripButtonView.Image");
-            toolStripButtonView.ImageScaling = ToolStripItemImageScaling.None;
+            toolStripButtonView.ImageScaling = ToolStripItemImageScaling.SizeToFit;
             toolStripButtonView.ImageTransparentColor = Color.Magenta;
             toolStripButtonView.Name = "toolStripButtonView";
             toolStripButtonView.Size = new Size(36, 33);
@@ -175,7 +175,7 @@
             // 
             toolStripButtonSave.DisplayStyle = ToolStripItemDisplayStyle.Image;
             toolStripButtonSave.Image = (Image)resources.GetObject("toolStripButtonSave.Image");
-            toolStripButtonSave.ImageScaling = ToolStripItemImageScaling.None;
+            toolStripButtonSave.ImageScaling = ToolStripItemImageScaling.SizeToFit;
             toolStripButtonSave.ImageTransparentColor = Color.Magenta;
             toolStripButtonSave.Name = "toolStripButtonSave";
             toolStripButtonSave.Size = new Size(36, 33);

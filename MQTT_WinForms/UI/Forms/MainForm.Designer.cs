@@ -66,7 +66,7 @@
             toolStripDropDownButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
             toolStripDropDownButton1.DropDownItems.AddRange(new ToolStripItem[] { newConnectionToolStripMenuItem });
             toolStripDropDownButton1.Image = (Image)resources.GetObject("toolStripDropDownButton1.Image");
-            toolStripDropDownButton1.ImageScaling = ToolStripItemImageScaling.None;
+            toolStripDropDownButton1.ImageScaling = ToolStripItemImageScaling.SizeToFit;
             toolStripDropDownButton1.ImageTransparentColor = Color.Magenta;
             toolStripDropDownButton1.Name = "toolStripDropDownButton1";
             toolStripDropDownButton1.Size = new Size(46, 33);
@@ -93,7 +93,7 @@
             // 
             stripButtonCloseTab.DisplayStyle = ToolStripItemDisplayStyle.Image;
             stripButtonCloseTab.Image = (Image)resources.GetObject("stripButtonCloseTab.Image");
-            stripButtonCloseTab.ImageScaling = ToolStripItemImageScaling.None;
+            stripButtonCloseTab.ImageScaling = ToolStripItemImageScaling.SizeToFit;
             stripButtonCloseTab.ImageTransparentColor = Color.Magenta;
             stripButtonCloseTab.Name = "stripButtonCloseTab";
             stripButtonCloseTab.Size = new Size(36, 33);
