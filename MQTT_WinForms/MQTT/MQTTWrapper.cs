@@ -27,13 +27,13 @@ namespace MQTT_WinForms.MQTT
 
         private Task Client_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
         {
-            Disconnected?.Invoke(this, new EventArgs());
+            Disconnected?.Invoke(this, EventArgs.Empty);
             return Task.CompletedTask;
         }
 
         private Task Client_ConnectedAsync(MqttClientConnectedEventArgs arg)
         {
-            Connected?.Invoke(this, new EventArgs());
+            Connected?.Invoke(this, EventArgs.Empty);
             return Task.CompletedTask;
         }
 
@@ -63,9 +63,9 @@ namespace MQTT_WinForms.MQTT
 
         public class MessageEventArgs: EventArgs
         {
-            public string Topic { get; set; }
+            public string? Topic { get; set; }
 
-            public string Message { get; set; }
+            public string? Message { get; set; }
         }
 
         public async Task<Status> ConnectAsync()

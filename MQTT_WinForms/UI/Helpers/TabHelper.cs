@@ -23,7 +23,7 @@ namespace MQTT_WinForms.UI.Helpers
             if (tabPage == null)
                 tabPage = new TabPage();
             tabPage.Text = "Willkommen";
-            WelcomeControl welcomeControl = new WelcomeControl();
+            WelcomeControl welcomeControl = new();
             welcomeControl.BackgroundImage = Properties.Resources.MQTT_Image;
             welcomeControl.BackgroundImageLayout = ImageLayout.Stretch; 
             welcomeControl.Dock = DockStyle.Fill;
@@ -94,12 +94,12 @@ namespace MQTT_WinForms.UI.Helpers
 
         public static TabPage NewConnectionTab()
         {
-            TabPage tabPage = new TabPage()
+            TabPage tabPage = new()
             {
                 Text = "Neue Verbindung"
             };
 
-            ConnectToBrokerControl control = new ConnectToBrokerControl();
+            ConnectToBrokerControl control = new();
             control.Dock = DockStyle.Fill;
             control.Size = tabPage.Size;
             control.Parent = tabPage;

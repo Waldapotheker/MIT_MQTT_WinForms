@@ -8,13 +8,13 @@ namespace MQTT_WinForms.UI.Forms
 {
     public static class InputBox
     {
-        public static string Show(string prompt, string title = "Eingabe", string defaultValue = "")
+        public static string? Show(string prompt, string title = "Eingabe", string defaultValue = "")
         {
-            Form form = new Form();
-            Label label = new Label();
-            TextBox textBox = new TextBox();
-            Button buttonOk = new Button();
-            Button buttonCancel = new Button();
+            Form form = new();
+            Label label = new();
+            TextBox textBox = new();
+            Button buttonOk = new();
+            Button buttonCancel = new();
 
             form.Text = title;
             label.Text = prompt;
@@ -31,9 +31,9 @@ namespace MQTT_WinForms.UI.Forms
             buttonCancel.SetBounds(310, 70, 80, 30);
 
             label.AutoSize = true;
-            textBox.Anchor = textBox.Anchor | AnchorStyles.Right;
+            textBox.Anchor |= AnchorStyles.Right;
             form.ClientSize = new Size(400, 110);
-            form.Controls.AddRange(new Control[] { label, textBox, buttonOk, buttonCancel });
+            form.Controls.AddRange([label, textBox, buttonOk, buttonCancel]);
             form.FormBorderStyle = FormBorderStyle.FixedDialog;
             form.StartPosition = FormStartPosition.CenterScreen;
             form.MinimizeBox = false;

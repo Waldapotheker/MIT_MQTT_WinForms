@@ -110,7 +110,12 @@
             tabControl.Padding = new Point(0, 0);
             tabControl.SelectedIndex = 0;
             tabControl.Size = new Size(914, 564);
+            tabControl.ItemSize = new Size(110, 20);
+            tabControl.SizeMode = TabSizeMode.Fixed;
             tabControl.TabIndex = 2;
+            tabControl.DrawMode = TabDrawMode.OwnerDrawFixed;
+            tabControl.DrawItem += TabControl_DrawItem;
+            tabControl.MouseDown += TabControl_MouseDown;
             // 
             // MainForm
             // 

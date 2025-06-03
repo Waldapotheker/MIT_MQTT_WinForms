@@ -8,6 +8,6 @@ namespace MQTT_WinForms.MQTT
 {
     public static class Connections
     {
-        public static List<Task>ActiveConnections = new List<Task>();
+        public static List<Task>ActiveConnections = new();
     }
 }
