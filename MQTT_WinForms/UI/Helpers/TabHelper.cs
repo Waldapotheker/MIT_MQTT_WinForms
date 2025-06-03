@@ -18,17 +18,18 @@ namespace MQTT_WinForms.UI.Helpers
         /// <param name="tabPage">TabPage, die als Willkommens-Tab verwendet wird</param>
         /// <param name="tabControl">TabControl, in der der Tab hinzugefügt werden soll</param>
         /// <returns></returns>
-        public static TabPage WelcomeTab(TabControl tabControl, TabPage tabPage = null)
+        public static TabPage WelcomeTab(TabControl tabControl, TabPage? tabPage = null)
         {
-            if (tabPage == null)
-                tabPage = new TabPage();
+            tabPage ??= new TabPage();
             tabPage.Text = "Willkommen";
-            WelcomeControl welcomeControl = new();
-            welcomeControl.BackgroundImage = Properties.Resources.MQTT_Image;
-            welcomeControl.BackgroundImageLayout = ImageLayout.Stretch; 
-            welcomeControl.Dock = DockStyle.Fill;
-            welcomeControl.Size = tabPage.Size;
-            welcomeControl.Parent = tabPage;
+            WelcomeControl welcomeControl = new()
+            {
+                BackgroundImage = Properties.Resources.MQTT_Image,
+                BackgroundImageLayout = ImageLayout.Stretch,
+                Dock = DockStyle.Fill,
+                Size = tabPage.Size,
+                Parent = tabPage
+            };
             welcomeControl.Show();
             tabPage.Controls.Add(welcomeControl);
             tabControl.Controls.Add(tabPage);
@@ -38,58 +39,45 @@ namespace MQTT_WinForms.UI.Helpers
 
         public static MainForm GetMainForm(object sender)
         {
-            MainForm mainForm = null;
-            switch (sender.GetType().Name)
+            MainForm? mainForm = sender.GetType().Name switch
             {
-                case "ToolStripButton":
-                    mainForm = ToolStripButton();
-                    break;
+                "ToolStripButton" => GetFromToolStripButton(),
+                "ToolStripMenuItem" => GetFromToolStripMenuItem(),
+                _ => throw new NotImplementedException("Falscher Datentyp: " + sender.GetType().Name),
+            };
 
-                case "ToolStripMenuItem":
-                    mainForm = ToolStripMenuItem();
-                    break;
+            return mainForm ?? throw new InvalidOperationException("MainForm nicht gefunden");
 
-                default:
-                    throw new NotImplementedException("Falscher Datentyp");
-
-            }
-
-            MainForm ToolStripButton()
+            MainForm? GetFromToolStripButton()
             {
                 ToolStripButton? button = sender as ToolStripButton;
-                ToolStrip? toolStrip = button.GetCurrentParent();
-                Control? control = toolStrip;
-                Form? form = control?.FindForm();
-                MainForm? mainForm = form as MainForm;
-                return mainForm;
+                Control? control = button?.GetCurrentParent();
+                return control?.FindForm() as MainForm;
             }
 
-            MainForm ToolStripMenuItem()
+            MainForm? GetFromToolStripMenuItem()
             {
-                MainForm mainForm = null;
-                ToolStripItem item = sender as ToolStripItem;
-                ToolStrip current = item?.Owner;
+                ToolStripItem? item = sender as ToolStripItem;
+                ToolStrip? current = item?.Owner;
 
                 while (current != null)
                 {
+                    Form? form = current.FindForm();
+                    if (form is MainForm mainForm)
+                        return mainForm;
+
                     if (current is ToolStripDropDown dropDown && dropDown.OwnerItem != null)
                     {
                         current = dropDown.OwnerItem.Owner;
                     }
                     else
+                    {
                         break;
+                    }
                 }
 
-                if (current != null)
-                {
-                    Form parent = current.FindForm();
-                    mainForm = parent as MainForm;
-                }
-
-
-                return mainForm;
+                return null;
             }
-            return mainForm;
         }
 
         public static TabPage NewConnectionTab()

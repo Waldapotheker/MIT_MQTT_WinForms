@@ -26,6 +26,9 @@ namespace MQTT_WinForms.Forms
 
         private async Task<bool> Connect(MQTTWrapper wrapper)
         {
+            if (wrapper == null || wrapper.Options == null)
+                return false;
+
             TaskCompletionSource<bool> tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
             wrapper.Connected += (sender, args) =>
@@ -40,7 +43,7 @@ namespace MQTT_WinForms.Forms
                 tcs.TrySetResult(false);
             }
 
-            Task completion = await Task.WhenAny(tcs.Task, Task.Delay(wrapper!.Options!.Timeout));
+            Task completion = await Task.WhenAny(tcs.Task, Task.Delay(wrapper.Options.Timeout));
 
             if(completion == tcs.Task)
             {
@@ -54,9 +57,12 @@ namespace MQTT_WinForms.Forms
 
         private async Task<bool> TryPublish(string text)
         {
+            if (Wrapper == null || Wrapper.Options == null)
+                return false;
+
             TaskCompletionSource<bool> tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            var status = await Wrapper!.PublishAsync(Topic, text);
+            var status = await Wrapper.PublishAsync(Topic, text);
 
             if (status != MqttClientHelper.Status.Success)
             {
@@ -67,7 +73,7 @@ namespace MQTT_WinForms.Forms
                 tcs.TrySetResult(true);
             }
 
-            Task completion = await Task.WhenAny(tcs.Task, Task.Delay(Wrapper!.Options!.Timeout));
+            Task completion = await Task.WhenAny(tcs.Task, Task.Delay(Wrapper.Options.Timeout));
 
             if (completion == tcs.Task)
             {
@@ -79,17 +85,18 @@ namespace MQTT_WinForms.Forms
             }
         }
 
-
-
         private async void toolStripButtonConnect_Click(object sender, EventArgs e)
         {
-            MainForm form = (MainForm)ParentForm;
+            MainForm? form = (MainForm?)ParentForm;
+            if (form == null || form.tabControl.SelectedTab == null)
+                return;
+
             form.tabControl.SelectedTab.Text = tbAdresse.Text;
 
             toolStripProgressBar.Value = 25;
             toolStripStatusLabel.Text = "Verbinde...";
 
-       
+
             ConnectionData connectionData = new()
             {
                 Address = tbAdresse.Text,
@@ -99,24 +106,24 @@ namespace MQTT_WinForms.Forms
                 Password = tbPasswort.Text,
             };
             toolStripProgressBar.Value = 60;
-  
+
             Wrapper = MqttClientHelper.Setup(connectionData);
-            if (Wrapper != null)
+            if (Wrapper == null)
+                return;
+
+            bool result = await Connect(Wrapper);
+            if (result)
             {
-                bool result = await Connect(Wrapper);
-                if(result)
-                {
-                    toolStripStatusLabel.Text = "Verbindung erfolgreich!";
-                    toolStripProgressBar.BackColor = Color.Green;
-                    toolStripButtonView_Click(null, null);
-                }
-                else
-                {
-                    toolStripStatusLabel.Text = "Keine Verbindung möglich!";
-                    toolStripProgressBar.BackColor = Color.Red;
-                }
-                toolStripProgressBar.Value = 100;
+                toolStripStatusLabel.Text = "Verbindung erfolgreich!";
+                toolStripProgressBar.BackColor = Color.Green;
+                toolStripButtonView_Click(null, null);
             }
+            else
+            {
+                toolStripStatusLabel.Text = "Keine Verbindung möglich!";
+                toolStripProgressBar.BackColor = Color.Red;
+            }
+            toolStripProgressBar.Value = 100;
         }
 
         private void toolStripButtonView_Click(object sender, EventArgs e)
@@ -131,8 +138,6 @@ namespace MQTT_WinForms.Forms
                 richTextBoxAusgabe.Visible = false;
                 textBoxInput.Visible = false;
             }
-
-
         }
 
         private async void toolStripButtonSave_Click(object sender, EventArgs e)
@@ -141,7 +146,7 @@ namespace MQTT_WinForms.Forms
 
             try
             {
-                using DataBaseContext context = new();
+                await using DataBaseContext context = new();
                 Connection connection = new()
                 {
                     Host = tbAdresse.Text,
@@ -172,7 +177,31 @@ namespace MQTT_WinForms.Forms
             tbPasswort.Text = connection.Password;
         }
 
+        private async void toolStripButtonTopic_Click(object sender, EventArgs e)
+        {
+            string? topic = InputBox.Show("Topic eingeben:");
+            if (Wrapper == null || string.IsNullOrEmpty(topic))
+                return;
+
+            Topic = topic;
+            await Wrapper.SubscribeAsync(Topic);
+        }
+
         private async void toolStripButtonSend_Click(object sender, EventArgs e)
+        {
+            await SendMessageAsync();
+        }
+
+        private async void textBoxInput_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && !e.Shift)
+            {
+                e.SuppressKeyPress = true;
+                await SendMessageAsync();
+            }
+        }
+
+        private async Task SendMessageAsync()
         {
             if (!string.IsNullOrEmpty(textBoxInput.Text))
             {
@@ -191,18 +220,6 @@ namespace MQTT_WinForms.Forms
             else
             {
                 toolStripStatusLabel.Text = "Das Eingabefeld ist leer";
-            }
-        }
-
-
-
-        private async void toolStripButtonTopic_Click(object sender, EventArgs e)
-        {
-            string topic = InputBox.Show("Topic eingeben:");
-            if (Wrapper != null && topic != string.Empty)
-            {
-                Topic = topic;
-                await Wrapper.SubscribeAsync(Topic);
             }
         }
     }

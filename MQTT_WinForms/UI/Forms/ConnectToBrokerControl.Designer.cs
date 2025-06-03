@@ -235,6 +235,7 @@
             textBoxInput.Size = new Size(1000, 64);
             textBoxInput.TabIndex = 13;
             textBoxInput.Visible = false;
+            textBoxInput.KeyDown += textBoxInput_KeyDown;
             // 
             // toolStripButtonTopic
             // 

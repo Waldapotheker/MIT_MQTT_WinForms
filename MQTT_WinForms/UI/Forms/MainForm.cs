@@ -17,7 +17,7 @@ namespace MQTT_WinForms
         {
             MainForm mainForm = TabHelper.GetMainForm(sender);
 
-            if (mainForm?.tabControl.TabPages.Count > 0)
+            if (mainForm.tabControl.TabPages.Count > 0)
             {
                 TabPage? currentTabPage = mainForm.tabControl.SelectedTab;
                 currentTabPage?.Dispose();
