@@ -20,8 +20,10 @@ namespace MQTT_WinForms.Forms
             nudPort.Value = 1883;
             tbClientId.Text = "default";
 
-            richTextBoxAusgabe.Dock = DockStyle.Fill;
-            textBoxInput.Dock = DockStyle.Bottom;
+            richTextBoxAusgabe.Visible = true;
+            textBoxInput.Visible = true;
+            mainTable.RowStyles[0].Height = 100;
+            mainTable.RowStyles[1].Height = 0;
         }
 
         private async Task<bool> Connect(MQTTWrapper wrapper)
@@ -38,14 +40,14 @@ namespace MQTT_WinForms.Forms
 
             var status = await wrapper.ConnectAsync();
 
-            if(status != MqttClientHelper.Status.Success)
+            if (status != MqttClientHelper.Status.Success)
             {
                 tcs.TrySetResult(false);
             }
 
             Task completion = await Task.WhenAny(tcs.Task, Task.Delay(wrapper.Options.Timeout));
 
-            if(completion == tcs.Task)
+            if (completion == tcs.Task)
             {
                 return await tcs.Task;
             }
@@ -116,7 +118,9 @@ namespace MQTT_WinForms.Forms
             {
                 toolStripStatusLabel.Text = "Verbindung erfolgreich!";
                 toolStripProgressBar.BackColor = Color.Green;
-                toolStripButtonView_Click(null, null);
+                toolStripButtonSave.Enabled = true;
+                toolStripButtonSend.Enabled = true;
+                ToggleView();
             }
             else
             {
@@ -126,18 +130,20 @@ namespace MQTT_WinForms.Forms
             toolStripProgressBar.Value = 100;
         }
 
-        private void toolStripButtonView_Click(object sender, EventArgs e)
+        private void ToggleView()
         {
-            if (!richTextBoxAusgabe.Visible)
+            if (mainTable.RowStyles[0].Height == 100)
             {
-                richTextBoxAusgabe.Visible = true;
-                textBoxInput.Visible = true;
+                mainTable.RowStyles[0].Height = 0;
+                mainTable.RowStyles[1].Height = 1;
             }
             else
             {
-                richTextBoxAusgabe.Visible = false;
-                textBoxInput.Visible = false;
+                mainTable.RowStyles[0].Height = 100;
+                mainTable.RowStyles[1].Height = 0;
             }
+
+
         }
 
         private async void toolStripButtonSave_Click(object sender, EventArgs e)
@@ -151,7 +157,6 @@ namespace MQTT_WinForms.Forms
                 {
                     Host = tbAdresse.Text,
                     Port = Decimal.ToInt32(nudPort.Value),
-                    Topic = tbClientId.Text,
                     Username = tbUsername.Text,
                     Password = tbPasswort.Text
                 };
@@ -172,7 +177,6 @@ namespace MQTT_WinForms.Forms
         {
             tbAdresse.Text = connection.Host;
             nudPort.Value = connection.Port;
-            tbClientId.Text = connection.Topic;
             tbUsername.Text = connection.Username;
             tbPasswort.Text = connection.Password;
         }
@@ -221,6 +225,31 @@ namespace MQTT_WinForms.Forms
             {
                 toolStripStatusLabel.Text = "Das Eingabefeld ist leer";
             }
+        }
+
+        private void tbClientId_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonSetTopic_Click(object sender, EventArgs e)
+        {
+            string? topic = InputBox.Show("Topic für Publish eingeben:");
+            if (Wrapper == null || string.IsNullOrEmpty(topic))
+                return;
+
+            Topic = topic;
+            toolStripStatusLabel.Text = $"Topic ist jetzt '{Topic}'";
+        }
+
+        private void buttonSubscribeClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonUnsubscribeClick(object sender, EventArgs e)
+        {
+
         }
     }
 }

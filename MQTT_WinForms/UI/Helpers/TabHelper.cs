@@ -39,6 +39,14 @@ namespace MQTT_WinForms.UI.Helpers
 
         public static MainForm GetMainForm(object sender)
         {
+            if(sender is Control control)
+            {
+                if (control.FindForm() is MainForm form)
+                { 
+                    return form; 
+                }
+            }
+
             MainForm? mainForm = sender.GetType().Name switch
             {
                 "ToolStripButton" => GetFromToolStripButton(),
@@ -84,7 +92,7 @@ namespace MQTT_WinForms.UI.Helpers
         {
             TabPage tabPage = new()
             {
-                Text = "Neue Verbindung"
+                Text = "Neu"
             };
 
             ConnectToBrokerControl control = new();

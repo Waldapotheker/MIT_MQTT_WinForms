@@ -30,117 +30,125 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            contextMenuStrip1 = new ContextMenuStrip(components);
+            contextMenu = new ContextMenuStrip(components);
             toolStrip = new ToolStrip();
-            toolStripDropDownButton1 = new ToolStripDropDownButton();
-            newConnectionToolStripMenuItem = new ToolStripMenuItem();
-            toolStripButton1 = new ToolStripButton();
-            stripButtonCloseTab = new ToolStripButton();
+            button_New = new ToolStripButton();
+            button_Load = new ToolStripButton();
             tabControl = new TabControl();
+            layoutPanel = new TableLayoutPanel();
+            toolStripSeparator1 = new ToolStripSeparator();
             toolStrip.SuspendLayout();
+            layoutPanel.SuspendLayout();
             SuspendLayout();
             // 
-            // contextMenuStrip1
+            // contextMenu
             // 
-            contextMenuStrip1.ImageScalingSize = new Size(20, 20);
-            contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(61, 4);
+            contextMenu.ImageScalingSize = new Size(20, 20);
+            contextMenu.Name = "contextMenu";
+            contextMenu.Size = new Size(61, 4);
             // 
             // toolStrip
             // 
-            toolStrip.AutoSize = false;
+            toolStrip.Dock = DockStyle.Fill;
+            toolStrip.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             toolStrip.GripStyle = ToolStripGripStyle.Hidden;
             toolStrip.ImageScalingSize = new Size(20, 20);
-            toolStrip.Items.AddRange(new ToolStripItem[] { toolStripDropDownButton1, toolStripButton1, stripButtonCloseTab });
+            toolStrip.Items.AddRange(new ToolStripItem[] { button_New, toolStripSeparator1, button_Load });
             toolStrip.LayoutStyle = ToolStripLayoutStyle.HorizontalStackWithOverflow;
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.RenderMode = ToolStripRenderMode.Professional;
-            toolStrip.Size = new Size(914, 36);
-            toolStrip.Stretch = true;
+            toolStrip.Size = new Size(1142, 37);
             toolStrip.TabIndex = 1;
             toolStrip.Text = "toolStrip1";
             // 
-            // toolStripDropDownButton1
+            // button_New
             // 
-            toolStripDropDownButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripDropDownButton1.DropDownItems.AddRange(new ToolStripItem[] { newConnectionToolStripMenuItem });
-            toolStripDropDownButton1.Image = (Image)resources.GetObject("toolStripDropDownButton1.Image");
-            toolStripDropDownButton1.ImageScaling = ToolStripItemImageScaling.SizeToFit;
-            toolStripDropDownButton1.ImageTransparentColor = Color.Magenta;
-            toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            toolStripDropDownButton1.Size = new Size(46, 33);
-            toolStripDropDownButton1.Text = "Neu";
+            button_New.BackColor = SystemColors.Control;
+            button_New.BackgroundImageLayout = ImageLayout.None;
+            button_New.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            button_New.Image = (Image)resources.GetObject("button_New.Image");
+            button_New.ImageScaling = ToolStripItemImageScaling.None;
+            button_New.ImageTransparentColor = Color.Magenta;
+            button_New.Name = "button_New";
+            button_New.Size = new Size(83, 32);
+            button_New.Text = "Neu";
+            button_New.Click += NewConnectionClick;
             // 
-            // newConnectionToolStripMenuItem
+            // button_Load
             // 
-            newConnectionToolStripMenuItem.Name = "newConnectionToolStripMenuItem";
-            newConnectionToolStripMenuItem.Size = new Size(213, 26);
-            newConnectionToolStripMenuItem.Text = "Connect To Broker";
-            newConnectionToolStripMenuItem.Click += NewConnectionToolStripMenuItem_Click;
-            // 
-            // toolStripButton1
-            // 
-            toolStripButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripButton1.Image = (Image)resources.GetObject("toolStripButton1.Image");
-            toolStripButton1.ImageTransparentColor = Color.Magenta;
-            toolStripButton1.Name = "toolStripButton1";
-            toolStripButton1.Size = new Size(29, 33);
-            toolStripButton1.Text = "toolStripButton1";
-            toolStripButton1.Click += toolStripButton1_Click;
-            // 
-            // stripButtonCloseTab
-            // 
-            stripButtonCloseTab.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            stripButtonCloseTab.Image = (Image)resources.GetObject("stripButtonCloseTab.Image");
-            stripButtonCloseTab.ImageScaling = ToolStripItemImageScaling.SizeToFit;
-            stripButtonCloseTab.ImageTransparentColor = Color.Magenta;
-            stripButtonCloseTab.Name = "stripButtonCloseTab";
-            stripButtonCloseTab.Size = new Size(36, 33);
-            stripButtonCloseTab.Text = "Schließen";
-            stripButtonCloseTab.Click += StripButtonCloseTab_Click;
+            button_Load.BackColor = SystemColors.Control;
+            button_Load.BackgroundImageLayout = ImageLayout.None;
+            button_Load.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            button_Load.Image = (Image)resources.GetObject("button_Load.Image");
+            button_Load.ImageScaling = ToolStripItemImageScaling.None;
+            button_Load.ImageTransparentColor = Color.Magenta;
+            button_Load.Name = "button_Load";
+            button_Load.Size = new Size(98, 32);
+            button_Load.Text = "Laden";
+            button_Load.Click += LoadConnectionClick;
             // 
             // tabControl
             // 
             tabControl.Dock = DockStyle.Fill;
+            tabControl.DrawMode = TabDrawMode.OwnerDrawFixed;
             tabControl.HotTrack = true;
-            tabControl.Location = new Point(0, 36);
+            tabControl.Location = new Point(0, 37);
             tabControl.Margin = new Padding(0);
             tabControl.Name = "tabControl";
-            tabControl.Padding = new Point(0, 0);
+            tabControl.Padding = new Point(10, 3);
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(914, 564);
-            tabControl.ItemSize = new Size(110, 20);
-            tabControl.SizeMode = TabSizeMode.Fixed;
+            tabControl.Size = new Size(1142, 713);
+            tabControl.SizeMode = TabSizeMode.FillToRight;
             tabControl.TabIndex = 2;
-            tabControl.DrawMode = TabDrawMode.OwnerDrawFixed;
             tabControl.DrawItem += TabControl_DrawItem;
             tabControl.MouseDown += TabControl_MouseDown;
             // 
+            // layoutPanel
+            // 
+            layoutPanel.ColumnCount = 1;
+            layoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            layoutPanel.Controls.Add(tabControl, 0, 1);
+            layoutPanel.Controls.Add(toolStrip, 0, 0);
+            layoutPanel.Dock = DockStyle.Fill;
+            layoutPanel.Location = new Point(0, 0);
+            layoutPanel.Name = "layoutPanel";
+            layoutPanel.RowCount = 2;
+            layoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 5F));
+            layoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 95F));
+            layoutPanel.Size = new Size(1142, 750);
+            layoutPanel.TabIndex = 3;
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(6, 37);
+            // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(914, 600);
-            Controls.Add(tabControl);
-            Controls.Add(toolStrip);
+            ClientSize = new Size(1142, 750);
+            Controls.Add(layoutPanel);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Margin = new Padding(3, 4, 3, 4);
+            Margin = new Padding(4, 5, 4, 5);
             Name = "MainForm";
             Text = "MQTT Client";
             toolStrip.ResumeLayout(false);
             toolStrip.PerformLayout();
+            layoutPanel.ResumeLayout(false);
+            layoutPanel.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private ContextMenuStrip contextMenuStrip1;
+        private ContextMenuStrip contextMenu;
         private ToolStrip toolStrip;
-        private ToolStripDropDownButton toolStripDropDownButton1;
-        private ToolStripMenuItem newConnectionToolStripMenuItem;
+        private ToolStripButton button_New;
         public TabControl tabControl;
-        private ToolStripButton stripButtonCloseTab;
-        private ToolStripButton toolStripButton1;
+        private ToolStripButton button_Load;
+        private TableLayoutPanel layoutPanel;
+        private ToolStripSeparator toolStripSeparator1;
     }
 }

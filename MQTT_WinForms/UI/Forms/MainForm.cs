@@ -1,7 +1,10 @@
+using MQTT_WinForms.BASE;
 using MQTT_WinForms.DB;
 using MQTT_WinForms.DB.Objects;
 using MQTT_WinForms.Forms;
+using MQTT_WinForms.Properties;
 using MQTT_WinForms.UI.Helpers;
+using System.Runtime.InteropServices;
 
 namespace MQTT_WinForms
 {
@@ -13,7 +16,7 @@ namespace MQTT_WinForms
             TabPage tabPage = TabHelper.WelcomeTab(tabControl);
         }
 
-        private static void StripButtonCloseTab_Click(object sender, EventArgs e)
+        private static void CloseTabClick(object sender, EventArgs e)
         {
             MainForm mainForm = TabHelper.GetMainForm(sender);
 
@@ -24,7 +27,7 @@ namespace MQTT_WinForms
             }
         }
 
-        private static void NewConnectionToolStripMenuItem_Click(object sender, EventArgs e)
+        private static void NewConnectionClick(object sender, EventArgs e)
         {
             MainForm mainForm = TabHelper.GetMainForm(sender);
             TabPage tabPage = TabHelper.NewConnectionTab();
@@ -32,7 +35,7 @@ namespace MQTT_WinForms
             mainForm.tabControl.SelectedTab = tabPage;
         }
 
-        private async void toolStripButton1_Click(object sender, EventArgs e)
+        private async void LoadConnectionClick(object sender, EventArgs e)
         {
             await using DataBaseContext context = new();
 
@@ -41,64 +44,64 @@ namespace MQTT_WinForms
                 .OrderBy(x => Math.Abs((x.CreationTime - DateTime.Now).Ticks))
                 .FirstOrDefault();
 
-            if(lastConnection != null)
+            if (lastConnection != null)
             {
                 MainForm mainForm = TabHelper.GetMainForm(sender);
                 TabPage connectionTab = TabHelper.NewConnectionTab();
 
                 ConnectToBrokerControl? connectionControl = connectionTab.Controls.OfType<ConnectToBrokerControl>().FirstOrDefault();
                 connectionControl?.SetConnection(lastConnection);
-               
+
                 mainForm.tabControl.TabPages.Add(connectionTab);
                 mainForm.tabControl.SelectedTab = connectionTab;
             }
 
         }
 
+        //[DllImport("user32.dll")]
+        //private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
+        //private const int TCM_SETMINTABWIDTH = 0x1300 + 49;
+        //private void TabControl_HandleCreated(object sender, EventArgs e)
+        //{
+        //    SendMessage(tabControl.Handle, TCM_SETMINTABWIDTH, IntPtr.Zero, (IntPtr)16);
+        //}
+
         private void TabControl_DrawItem(object? sender, DrawItemEventArgs e)
         {
             TabPage tabPage = tabControl.TabPages[e.Index];
             Rectangle tabRect = tabControl.GetTabRect(e.Index);
+            tabRect.Inflate(-2, -2);
 
-            TextRenderer.DrawText(
-                e.Graphics,
-                tabPage.Text,
-                e.Font,
-                tabRect,
-                tabPage.ForeColor,
-                TextFormatFlags.Left | TextFormatFlags.VerticalCenter
-            );
+            Bitmap closeImage = resources.Icon_Close;
 
-            const int xMargin = 5;
-            const int yMargin = 4;
-            const int xSize = 6;
-            Rectangle closeRect = new(
-                tabRect.Right - xSize - xMargin,
-                tabRect.Top + yMargin,
-                xSize, xSize);
+            // Platz fürs X abziehen
+            int iconPadding = 4;
+            Rectangle textRect = new Rectangle(tabRect.X, tabRect.Y, tabRect.Width - closeImage.Width - iconPadding, tabRect.Height);
 
-            using Pen pen = new(Color.IndianRed, 2);
-            e.Graphics.DrawLine(pen, closeRect.Left, closeRect.Top, closeRect.Right, closeRect.Bottom);
-            e.Graphics.DrawLine(pen, closeRect.Right, closeRect.Top, closeRect.Left, closeRect.Bottom);
+            // Text zeichnen im gekürzten Bereich
+            TextRenderer.DrawText(e.Graphics, tabPage.Text, tabPage.Font, textRect, tabPage.ForeColor, TextFormatFlags.Left);
 
+            // X zeichnen rechts
+            int iconX = tabRect.Right - closeImage.Width;
+            int iconY = tabRect.Top + (tabRect.Height - closeImage.Height) / 2;
+            e.Graphics.DrawImage(closeImage, iconX, iconY);
         }
 
         private void TabControl_MouseDown(object? sender, MouseEventArgs e)
         {
-            for (int i = 0; i < tabControl.TabPages.Count; i++)
+            for (var i = 0; i < tabControl.TabPages.Count; i++)
             {
-                Rectangle tabRect = tabControl.GetTabRect(i);
-                const int xMargin = 5;
-                const int yMargin = 4;
-                const int xSize = 6;
-                Rectangle closeRect = new (
-                    tabRect.Right - xSize - xMargin,
-                    tabRect.Top + yMargin,
-                    xSize, xSize);
-
-                if (closeRect.Contains(e.Location))
+                var tabRect = tabControl.GetTabRect(i);
+                tabRect.Inflate(-2, -2);
+                var closeImage = resources.Icon_Close;
+                var imageRect = new Rectangle(
+                    (tabRect.Right - closeImage.Width),
+                    tabRect.Top + (tabRect.Height - closeImage.Height) / 2,
+                    closeImage.Width,
+                    closeImage.Height);
+                if (imageRect.Contains(e.Location))
                 {
-                    tabControl.TabPages[i].Dispose();
+                    tabControl.TabPages.RemoveAt(i);
                     break;
                 }
             }

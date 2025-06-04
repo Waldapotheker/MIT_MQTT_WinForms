@@ -9,6 +9,7 @@
     <StartupObject>MQTT_WinForms.BASE.Program</StartupObject>
     <ApplicationIcon>UI\Icons\MQTT_Image.ico</ApplicationIcon>
     <AssemblyName>WinMQTT</AssemblyName>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -54,6 +55,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="BASE\resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>resources.resx</DependentUpon>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -62,6 +68,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="BASE\resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
