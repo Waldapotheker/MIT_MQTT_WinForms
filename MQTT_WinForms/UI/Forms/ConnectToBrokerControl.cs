@@ -203,13 +203,15 @@ namespace MQTT_WinForms.Forms
 
         private async Task SendMessageAsync()
         {
-            if (!string.IsNullOrEmpty(textBoxInput.Text))
+			string messageText = textBoxInput.Text
+            if (!string.IsNullOrEmpty(messageText))
             {
-                bool result = await TryPublish(textBoxInput.Text);
+                bool result = await TryPublish(messageText);
 
                 if (result)
                 {
                     toolStripStatusLabel.Text = "Erfolgreich gesendet";
+					await LogSentMessageAsync(Topic, messageText);
                     textBoxInput.Text = string.Empty;
                 }
                 else
@@ -222,5 +224,25 @@ namespace MQTT_WinForms.Forms
                 toolStripStatusLabel.Text = "Das Eingabefeld ist leer";
             }
         }
+
+		private async Task LogSentMessageAsync(string topic, string messageText)
+		{
+    		try
+    		{
+        		await using var context = new DataBaseContext();
+        		var log = new Message
+        		{
+            		Topic = topic,
+            		MessageText = messageText,
+            		Timestamp = DateTime.Now,
+        		};
+        		context.Messages.Add(log);
+        		await context.SaveChangesAsync();
+    		}
+    		catch (Exception ex)
+    		{
+        		Debug.WriteLine($"Failed to log message: {ex}");
+    		}
+		}
     }
 }
