@@ -228,6 +228,7 @@
             toolStripButtonSend.Name = "toolStripButtonSend";
             toolStripButtonSend.Size = new Size(103, 9);
             toolStripButtonSend.Text = "Senden";
+            toolStripButtonSend.Click += toolStripButtonSend_Click;
             // 
             // toolStripSeparator3
             // 

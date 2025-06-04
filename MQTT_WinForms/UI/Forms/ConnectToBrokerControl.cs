@@ -3,6 +3,7 @@ using MQTT_WinForms.DB;
 using MQTT_WinForms.DB.Objects;
 using MQTT_WinForms.MQTT;
 using MQTT_WinForms.UI.Forms;
+using Message = MQTT_WinForms.DB.Objects.Message;
 
 namespace MQTT_WinForms.Forms
 {
@@ -191,11 +192,6 @@ namespace MQTT_WinForms.Forms
             await Wrapper.SubscribeAsync(Topic);
         }
 
-        private async void toolStripButtonSend_Click(object sender, EventArgs e)
-        {
-            await SendMessageAsync();
-        }
-
         private async void textBoxInput_KeyDown(object? sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter && !e.Shift)
@@ -207,15 +203,17 @@ namespace MQTT_WinForms.Forms
 
         private async Task SendMessageAsync()
         {
-			string messageText = textBoxInput.Text
+            string messageText = textBoxInput.Text;
             if (!string.IsNullOrEmpty(messageText))
             {
                 bool result = await TryPublish(messageText);
 
                 if (result)
                 {
+                    string formattedTest = $"[SEND] {DateTime.Now.ToString("HH:mm:ss")} - {messageText}";
+                    richTextBoxAusgabe.AppendText(formattedTest);
                     toolStripStatusLabel.Text = "Erfolgreich gesendet";
-					await LogSentMessageAsync(Topic, messageText);
+                    await LogSentMessageAsync(Topic, messageText);
                     textBoxInput.Text = string.Empty;
                 }
                 else
@@ -254,24 +252,29 @@ namespace MQTT_WinForms.Forms
 
         }
 
-		private async Task LogSentMessageAsync(string topic, string messageText)
-		{
-    		try
-    		{
-        		await using var context = new DataBaseContext();
-        		var log = new Message
-        		{
-            		Topic = topic,
-            		MessageText = messageText,
-            		Timestamp = DateTime.Now,
-        		};
-        		context.Messages.Add(log);
-        		await context.SaveChangesAsync();
-    		}
-    		catch (Exception ex)
-    		{
-        		Debug.WriteLine($"Failed to log message: {ex}");
-    		}
-		}
+        private async Task LogSentMessageAsync(string topic, string messageText)
+        {
+            try
+            {
+                await using var context = new DataBaseContext();
+                var log = new Message
+                {
+                    Topic = topic,
+                    MessageText = messageText,
+                    Timestamp = DateTime.Now,
+                };
+                context.Messages.Add(log);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                toolStripStatusLabel.Text = "Fehler beim Speichern von Nachricht";
+            }
+        }
+
+        private async void toolStripButtonSend_Click(object sender, EventArgs e)
+        {
+            await SendMessageAsync();
+        }
     }
 }
