@@ -68,20 +68,32 @@ namespace MQTT_WinForms.UI.Forms
 
         private async void BtEditClick(object sender, EventArgs e)
         {
-            if (lbSubscriptions.SelectedIndex != -1)
+            int index = lbSubscriptions.SelectedIndex;
+            if (index != -1 && lbSubscriptions.Items[index] is SubscriptionItem subscriptionItem)
             {
-                object item = lbSubscriptions.Items[lbSubscriptions.SelectedIndex];
-                if (item is SubscriptionItem subscriptionItem)
+                var existingSubscription = subscriptionItem.Subscription;
+
+                UserInput.InputResult? input = UserInput.QueryUser(
+                    existingSubscription.Topic,
+                    (MqttQualityOfServiceLevel)existingSubscription.QualityOfService
+                );
+
+                if (input.HasValue)
                 {
-                    var existingSubscription = subscriptionItem.Subscription;
-                    UserInput.InputResult? input = UserInput.QueryUser(subscriptionItem.Subscription.Topic, (MqttQualityOfServiceLevel)subscriptionItem.Subscription.QualityOfService);
-                    if (input.HasValue)
+                    await using DataBaseContext context = new();
+
+                    var subInDb = context.Subscriptions.FirstOrDefault(s => s.ID == existingSubscription.ID);
+                    if (subInDb != null)
                     {
-                        await using DataBaseContext context = new();
-                        existingSubscription.QualityOfService = (int)input.Value.QualityOfService;
-                        existingSubscription.Topic = input.Value.Topic;
+                        subInDb.Topic = input.Value.Topic;
+                        subInDb.QualityOfService = (int)input.Value.QualityOfService;
 
                         await context.SaveChangesAsync();
+
+                        existingSubscription.Topic = input.Value.Topic;
+                        existingSubscription.QualityOfService = (int)input.Value.QualityOfService;
+
+                        lbSubscriptions.Items[index] = new SubscriptionItem(existingSubscription);
                     }
                 }
             }
