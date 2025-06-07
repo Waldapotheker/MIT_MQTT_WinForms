@@ -4,6 +4,7 @@ using MQTT_WinForms.DB.Enums;
 using MQTT_WinForms.DB.Objects;
 using MQTT_WinForms.MQTT;
 using MQTTnet.Protocol;
+using System.Windows.Forms;
 using Message = MQTT_WinForms.DB.Objects.Message;
 
 namespace MQTT_WinForms.UI.Forms
@@ -118,6 +119,8 @@ namespace MQTT_WinForms.UI.Forms
 
                 Connection = existingConnection;
 
+                await LoadSavedMessagesAsync();
+
                 ToggleView();
 
                 toolStripStatusLabel.Text = "Verbindung erfolgreich!";
@@ -134,7 +137,7 @@ namespace MQTT_WinForms.UI.Forms
 
         private void ToggleView()
         {
-            if (mainTable.RowStyles[0].Height == 100)
+            if (mainTable.RowStyles[0].Height.Equals(100))
             {
                 mainTable.RowStyles[0].Height = 0;
                 mainTable.RowStyles[1].Height = 1;
@@ -215,9 +218,10 @@ namespace MQTT_WinForms.UI.Forms
 
                 if (result)
                 {
-                    string formattedTest =
-                        $"[SEND] {PublishTopic}:{(int)PublishQOS} {DateTime.Now:HH:mm:ss} - {messageText}";
-                    richTextBoxAusgabe.AppendText(formattedTest + Environment.NewLine);
+                    string formatted = string.Format("{0,-10} {1,-20} {2,-5} {3,-10} {4}", "[SEND]",
+                        PublishTopic, (int)PublishQOS, DateTime.Now.ToString("HH:mm:ss"), messageText);
+
+                    richTextBoxAusgabe.AppendText(formatted + Environment.NewLine);
                     toolStripStatusLabel.Text = "Erfolgreich gesendet";
                     await LogSentMessageAsync(PublishTopic, messageText);
                     textBoxInput.Text = string.Empty;
@@ -230,6 +234,38 @@ namespace MQTT_WinForms.UI.Forms
             else
             {
                 toolStripStatusLabel.Text = "Das Eingabefeld ist leer";
+            }
+        }
+
+        private async Task LoadSavedMessagesAsync()
+        {
+            if (Connection == null) return;
+            richTextBoxAusgabe.Clear();
+
+            string header = string.Format("{0,-10} {1,-20} {2,-5} {3,-10} {4}", "Direction", "Topic", "QoS", "Time", "Text");
+            richTextBoxAusgabe.AppendText(header + Environment.NewLine);
+
+            try
+            {
+                await using DataBaseContext context = new();
+                var savedMessages = context.Messages
+                    .Where(m => m.Topic == PublishTopic)
+                    .OrderByDescending(m => m.Timestamp)
+                    .Take(100)
+                    .ToList();
+
+                foreach (var message in savedMessages.OrderBy(m => m.Timestamp))
+                {
+                    string prefix = message.Direction == MessageDirection.Sent ? "[SEND]" : "[RECV]";
+                    string formatted = string.Format("{0,-10} {1,-20} {2,-5} {3,-10} {4}",
+                        prefix, message.Topic, message.QoSLevel, message.Timestamp.ToString("HH:mm:ss"), message.MessageText);
+
+                    richTextBoxAusgabe.AppendText(formatted + Environment.NewLine);
+                }
+            }
+            catch (Exception)
+            {
+                toolStripStatusLabel.Text = "Fehler beim Laden der Nachrichten";
             }
         }
 
