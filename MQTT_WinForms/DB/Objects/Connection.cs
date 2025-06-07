@@ -12,10 +12,10 @@ namespace MQTT_WinForms.DB.Objects
 
         public int Port { get; set; }
 
-        public string? Topic { get; set; }
-
         public string? Username { get; set; }
 
-        public string? Password { get; set; } 
+        public string? Password { get; set; }
+
+        public List<Subscription> Subscriptions { get; set; } = new();
     }
 }

@@ -12,10 +12,12 @@ namespace MQTT_WinForms.DB
 
         public DbSet<Connection> Connections { get; set; }
 
+        public DbSet<Subscription> Subscriptions { get; set; }
+
         public DataBaseContext()
         {
             string path = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MQTTUI");
-            if(!Path.Exists(path))
+            if (!Path.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
@@ -24,7 +26,7 @@ namespace MQTT_WinForms.DB
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {      
+        {
             options.UseSqlite($"Data Source={SavePath}");
         }
     }
