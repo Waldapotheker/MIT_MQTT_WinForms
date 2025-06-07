@@ -31,6 +31,10 @@ namespace MQTT_WinForms.UI.Forms
             UserInput.InputResult? input = UserInput.QueryUser();
             if (input.HasValue)
             {
+                await using DataBaseContext context = new();
+
+                context.Connections.Attach(connection);
+
                 Subscription sub = new()
                 {
                     Connection = connection,
@@ -38,12 +42,9 @@ namespace MQTT_WinForms.UI.Forms
                     Topic = input.Value.Topic
                 };
 
-                await using DataBaseContext context = new();
-
-                connection.Subscriptions.Add(sub);
                 await context.Subscriptions.AddAsync(sub);
-
                 await context.SaveChangesAsync();
+
                 lbSubscriptions.Items.Add(new SubscriptionItem(sub));
             }
         }
