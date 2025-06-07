@@ -21,7 +21,8 @@ namespace MQTT_WinForms.UI.Forms
 
             var fullConnection = context.Connections
                 .Where(c => c.ID == connection.ID)
-                .Select(c => new {
+                .Select(c => new
+                {
                     Connection = c,
                     Subscriptions = c.Subscriptions.ToList()
                 })
@@ -155,7 +156,36 @@ namespace MQTT_WinForms.UI.Forms
             }
         }
 
+        private async void btSubscribe_Click(object sender, EventArgs e)
+        {
+            if (lbSubscriptions.SelectedItem is SubscriptionItem item)
+            {
+                MainForm? form = (MainForm?)Application.OpenForms["MainForm"];
+                if (form?.ActiveControl is ConnectToBrokerControl control && control.Wrapper?.Client?.IsConnected == true)
+                {
+                    var result = await control.Wrapper.SubscribeAsync(
+                        item.Subscription.Topic,
+                        (MqttQualityOfServiceLevel)item.Subscription.QualityOfService
+                    );
 
+                    control.LogMessage($"[SUBSCRIBED] - {item.Subscription.Topic} - QoS {item.Subscription.QualityOfService}");
+                }
+            }
+        }
+
+
+        private async void btUnsubscribe_Click(object sender, EventArgs e)
+        {
+            if (lbSubscriptions.SelectedItem is SubscriptionItem item)
+            {
+                MainForm? form = (MainForm?)Application.OpenForms["MainForm"];
+                if (form?.ActiveControl is ConnectToBrokerControl control && control.Wrapper?.Client?.IsConnected == true)
+                {
+                    await control.Wrapper.Client.UnsubscribeAsync(item.Subscription.Topic);
+                    control.LogMessage($"[UNSUBSCRIBED] - {item.Subscription.Topic}");
+                }
+            }
+        }
     }
 
     public class SubscriptionItem(Subscription subscription)
