@@ -39,12 +39,9 @@ namespace MQTT_WinForms.UI.Helpers
 
         public static MainForm GetMainForm(object sender)
         {
-            if(sender is Control control)
+            if (sender is Control control && control.FindForm() is MainForm form)
             {
-                if (control.FindForm() is MainForm form)
-                { 
-                    return form; 
-                }
+                return form;
             }
 
             MainForm? mainForm = sender.GetType().Name switch

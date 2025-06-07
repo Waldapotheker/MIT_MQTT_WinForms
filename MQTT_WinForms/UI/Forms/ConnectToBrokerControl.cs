@@ -1,5 +1,6 @@
 ﻿using MQTT_WinForms.BASE;
 using MQTT_WinForms.DB;
+using MQTT_WinForms.DB.Enums;
 using MQTT_WinForms.DB.Objects;
 using MQTT_WinForms.MQTT;
 using MQTT_WinForms.UI.Forms;
@@ -211,7 +212,7 @@ namespace MQTT_WinForms.Forms
                 if (result)
                 {
                     string formattedTest = $"[SEND] {DateTime.Now.ToString("HH:mm:ss")} - {messageText}";
-                    richTextBoxAusgabe.AppendText(formattedTest);
+                    richTextBoxAusgabe.AppendText(formattedTest + "\n");
                     toolStripStatusLabel.Text = "Erfolgreich gesendet";
                     await LogSentMessageAsync(Topic, messageText);
                     textBoxInput.Text = string.Empty;
@@ -261,7 +262,7 @@ namespace MQTT_WinForms.Forms
                 {
                     Topic = topic,
                     MessageText = messageText,
-                    Timestamp = DateTime.Now,
+                    Direction = MessageDirection.Sent
                 };
                 context.Messages.Add(log);
                 await context.SaveChangesAsync();

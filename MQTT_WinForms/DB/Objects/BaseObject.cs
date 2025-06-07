@@ -4,7 +4,7 @@ namespace MQTT_WinForms.DB.Objects
 {
     public abstract class BaseObject
     {
-        public BaseObject()
+        protected BaseObject()
         {
             ID = Guid.NewGuid();
             CreationTime = DateTime.Now;

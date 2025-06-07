@@ -58,14 +58,6 @@ namespace MQTT_WinForms
 
         }
 
-        //[DllImport("user32.dll")]
-        //private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
-        //private const int TCM_SETMINTABWIDTH = 0x1300 + 49;
-        //private void TabControl_HandleCreated(object sender, EventArgs e)
-        //{
-        //    SendMessage(tabControl.Handle, TCM_SETMINTABWIDTH, IntPtr.Zero, (IntPtr)16);
-        //}
-
         private void TabControl_DrawItem(object? sender, DrawItemEventArgs e)
         {
             TabPage tabPage = tabControl.TabPages[e.Index];
@@ -74,14 +66,11 @@ namespace MQTT_WinForms
 
             Bitmap closeImage = resources.Icon_Close;
 
-            // Platz fürs X abziehen
             int iconPadding = 4;
             Rectangle textRect = new Rectangle(tabRect.X, tabRect.Y, tabRect.Width - closeImage.Width - iconPadding, tabRect.Height);
 
-            // Text zeichnen im gekürzten Bereich
             TextRenderer.DrawText(e.Graphics, tabPage.Text, tabPage.Font, textRect, tabPage.ForeColor, TextFormatFlags.Left);
 
-            // X zeichnen rechts
             int iconX = tabRect.Right - closeImage.Width;
             int iconY = tabRect.Top + (tabRect.Height - closeImage.Height) / 2;
             e.Graphics.DrawImage(closeImage, iconX, iconY);
