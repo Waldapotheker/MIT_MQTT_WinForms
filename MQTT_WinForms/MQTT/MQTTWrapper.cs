@@ -42,10 +42,11 @@ namespace MQTT_WinForms.MQTT
             var topic = arg.ApplicationMessage.Topic;
             var payload = Encoding.UTF8.GetString(arg.ApplicationMessage.Payload);
 
-            RecieveMessage?.Invoke(this, new MessageEventArgs()
+            ReceiveMessage?.Invoke(this, new MessageEventArgs()
             {
                 Topic = topic,
-                Message = payload
+                Message = payload,
+                QoS = arg.ApplicationMessage.QualityOfServiceLevel
             });
 
             return Task.CompletedTask;
@@ -55,7 +56,7 @@ namespace MQTT_WinForms.MQTT
 
         public MqttClientOptions? Options { get; set; }
 
-        public event EventHandler<MessageEventArgs>? RecieveMessage;
+        public event EventHandler<MessageEventArgs>? ReceiveMessage;
 
         public event EventHandler<EventArgs>? Disconnected;
 
@@ -66,6 +67,8 @@ namespace MQTT_WinForms.MQTT
             public string? Topic { get; set; }
 
             public string? Message { get; set; }
+
+            public MqttQualityOfServiceLevel QoS { get; set; }
         }
 
         public async Task<Status> ConnectAsync()

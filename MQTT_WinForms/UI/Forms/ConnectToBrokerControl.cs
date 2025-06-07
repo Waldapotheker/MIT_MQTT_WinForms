@@ -11,7 +11,7 @@ namespace MQTT_WinForms.UI.Forms
 {
     public partial class ConnectToBrokerControl : UserControl
     {
-        private MQTTWrapper? Wrapper { get; set; }
+        public MQTTWrapper? Wrapper { get; set; }
         private string PublishTopic { get; set; } = "default";
         private MqttQualityOfServiceLevel PublishQOS { get; set; } = MqttQualityOfServiceLevel.AtMostOnce;
 
@@ -90,6 +90,7 @@ namespace MQTT_WinForms.UI.Forms
             toolStripProgressBar.Value = 60;
 
             Wrapper = MqttClientHelper.Setup(connectionData);
+            Wrapper.ReceiveMessage += OnMessageReceived;
             if (Wrapper == null)
                 return;
 
@@ -119,6 +120,8 @@ namespace MQTT_WinForms.UI.Forms
 
                 Connection = existingConnection;
 
+                richTextBoxAusgabe.Clear();
+                await SubscribeToSavedTopicsAsync();
                 await LoadSavedMessagesAsync();
 
                 ToggleView();
@@ -237,10 +240,35 @@ namespace MQTT_WinForms.UI.Forms
             }
         }
 
+        private async Task SubscribeToSavedTopicsAsync()
+        {
+            if (Wrapper == null || Connection == null)
+                return;
+
+            try
+            {
+                await using DataBaseContext context = new();
+                var subscriptions = context.Subscriptions
+                    .Where(s => s.Connection.ID == Connection.ID)
+                    .ToList();
+
+                foreach (var sub in subscriptions)
+                {
+                    await Wrapper.SubscribeAsync(sub.Topic, (MqttQualityOfServiceLevel)sub.QualityOfService);
+                    richTextBoxAusgabe.AppendText($"[SUBSCRIBED] - {sub.Topic} - QoS {sub.QualityOfService}" + Environment.NewLine);
+                }
+                richTextBoxAusgabe.AppendText(Environment.NewLine);
+            }
+            catch (Exception)
+            {
+                toolStripStatusLabel.Text = "Fehler beim Laden der Subscriptions";
+            }
+        }
+
+
         private async Task LoadSavedMessagesAsync()
         {
             if (Connection == null) return;
-            richTextBoxAusgabe.Clear();
 
             string header = string.Format("{0,-10} {1,-20} {2,-5} {3,-10} {4}", "Direction", "Topic", "QoS", "Time", "Text");
             richTextBoxAusgabe.AppendText(header + Environment.NewLine);
@@ -267,6 +295,58 @@ namespace MQTT_WinForms.UI.Forms
             {
                 toolStripStatusLabel.Text = "Fehler beim Laden der Nachrichten";
             }
+        }
+
+        private async void OnMessageReceived(object? sender, MQTTWrapper.MessageEventArgs e)
+        {
+            string time = DateTime.Now.ToString("HH:mm:ss");
+            string formatted = string.Format("{0,-10} {1,-20} {2,-5} {3,-10} {4}", "[RECV]", e.Topic, (int)e.QoS, time, e.Message);
+
+            if (richTextBoxAusgabe.InvokeRequired)
+            {
+                richTextBoxAusgabe.Invoke(() => richTextBoxAusgabe.AppendText(formatted + Environment.NewLine));
+            }
+            else
+            {
+                richTextBoxAusgabe.AppendText(formatted + Environment.NewLine);
+            }
+
+            try
+            {
+                await using DataBaseContext context = new();
+                Message log = new()
+                {
+                    Topic = e.Topic ?? "unknown",
+                    MessageText = e.Message ?? "",
+                    Timestamp = DateTime.Now,
+                    Direction = MessageDirection.Received,
+                    QoSLevel = (int)e.QoS,
+                    ClientID = Wrapper?.Options?.ClientId ?? "unknown"
+                };
+                context.Messages.Add(log);
+                await context.SaveChangesAsync();
+            }
+            catch
+            {
+                toolStripStatusLabel.Text = "Fehler beim Speichern empfangener Nachricht";
+            }
+        }
+
+        public void LogMessage(string message)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(() => AppendLog(message));
+            }
+            else
+            {
+                AppendLog(message);
+            }
+        }
+
+        private void AppendLog(string message)
+        {
+            richTextBoxAusgabe.AppendText(message + Environment.NewLine);
         }
 
         private void buttonSetTopic_Click(object sender, EventArgs e)

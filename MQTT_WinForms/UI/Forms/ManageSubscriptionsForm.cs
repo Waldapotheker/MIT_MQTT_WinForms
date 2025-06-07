@@ -1,5 +1,6 @@
 ﻿using MQTT_WinForms.DB;
 using MQTT_WinForms.DB.Objects;
+using MQTTnet;
 using MQTTnet.Protocol;
 using static MQTT_WinForms.UI.Forms.LoadConnectionForm;
 
@@ -16,15 +17,31 @@ namespace MQTT_WinForms.UI.Forms
 
         public static void Manage(Connection connection)
         {
-            ManageSubscriptionsForm form = new ManageSubscriptionsForm();
-            form.connection = connection;
-            foreach (Subscription subscription in connection.Subscriptions)
+            using DataBaseContext context = new();
+
+            var fullConnection = context.Connections
+                .Where(c => c.ID == connection.ID)
+                .Select(c => new {
+                    Connection = c,
+                    Subscriptions = c.Subscriptions.ToList()
+                })
+                .FirstOrDefault();
+
+            if (fullConnection == null) return;
+
+            ManageSubscriptionsForm form = new()
             {
-                form.lbSubscriptions.Items.Add(new SubscriptionItem(subscription));
+                connection = fullConnection.Connection
+            };
+
+            foreach (Subscription sub in fullConnection.Subscriptions)
+            {
+                form.lbSubscriptions.Items.Add(new SubscriptionItem(sub));
             }
 
             form.ShowDialog();
         }
+
 
         private async void btAdd_Click(object sender, EventArgs e)
         {
@@ -77,10 +94,21 @@ namespace MQTT_WinForms.UI.Forms
                 object item = lbSubscriptions.Items[lbSubscriptions.SelectedIndex];
                 if (item is SubscriptionItem subscriptionItem)
                 {
-                    await using DataBaseContext context = new();
-                    subscriptionItem.Subscription.Connection.Subscriptions.Remove(subscriptionItem.Subscription);
-                    context.Subscriptions.Remove(subscriptionItem.Subscription);
+                    try
+                    {
+                        MainForm? form = (MainForm?)Application.OpenForms["MainForm"];
+                        if (form?.ActiveControl is ConnectToBrokerControl control && control.Wrapper?.Client?.IsConnected == true)
+                        {
+                            await control.Wrapper.Client.UnsubscribeAsync(subscriptionItem.Subscription.Topic);
+                        }
+                    }
+                    catch
+                    {
+                        // Do nothing; the broker doesn't care
+                    }
 
+                    await using DataBaseContext context = new();
+                    context.Subscriptions.Remove(subscriptionItem.Subscription);
                     await context.SaveChangesAsync();
 
                     lbSubscriptions.Items.Remove(subscriptionItem);
@@ -88,22 +116,34 @@ namespace MQTT_WinForms.UI.Forms
             }
         }
 
+
         private void btOK_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void lbSubscriptions_DoubleClick(object sender, MouseEventArgs e)
+        private async void lbSubscriptions_DoubleClick(object sender, MouseEventArgs e)
         {
             int index = lbSubscriptions.IndexFromPoint(e.Location);
-            if (index != ListBox.NoMatches)
+            if (index == ListBox.NoMatches)
+                return;
+
+            if (lbSubscriptions.Items[index] is SubscriptionItem subscriptionItem)
             {
-                object item = lbSubscriptions.Items[index];
-                if (item is SubscriptionItem subscriptionItem)
+                MainForm? form = (MainForm?)Application.OpenForms["MainForm"];
+                if (form?.ActiveControl is ConnectToBrokerControl control && control.Wrapper?.Client?.IsConnected == true)
                 {
+                    _ = await control.Wrapper.SubscribeAsync(
+                        subscriptionItem.Subscription.Topic,
+                        (MqttQualityOfServiceLevel)subscriptionItem.Subscription.QualityOfService
+                    );
+
+                    control.LogMessage($"[(RE)SUBSCRIBED] - {subscriptionItem.Subscription.Topic} - QoS {subscriptionItem.Subscription.QualityOfService}");
                 }
             }
         }
+
+
     }
 
     public class SubscriptionItem(Subscription subscription)
