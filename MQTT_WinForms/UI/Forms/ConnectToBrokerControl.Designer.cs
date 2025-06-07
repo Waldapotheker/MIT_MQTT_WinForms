@@ -1,4 +1,4 @@
-﻿namespace MQTT_WinForms.Forms
+﻿namespace MQTT_WinForms.UI.Forms
 {
     partial class ConnectToBrokerControl
     {
@@ -37,7 +37,7 @@
             toolStripStatusLabel = new ToolStripStatusLabel();
             toolStripProgressBar = new ToolStripProgressBar();
             mainTable = new TableLayoutPanel();
-            tableLayoutPanel2 = new TableLayoutPanel();
+            logLayout = new TableLayoutPanel();
             richTextBoxAusgabe = new RichTextBox();
             textBoxInput = new TextBox();
             toolStripConnection = new ToolStrip();
@@ -47,8 +47,7 @@
             toolStripSeparator3 = new ToolStripSeparator();
             buttonSubscribe = new ToolStripButton();
             toolStripSeparator4 = new ToolStripSeparator();
-            buttonUnsubscribe = new ToolStripButton();
-            tableLayoutPanel3 = new TableLayoutPanel();
+            connectionBoxesLayout = new TableLayoutPanel();
             tbPasswort = new TextBox();
             label5 = new Label();
             label2 = new Label();
@@ -64,9 +63,9 @@
             toolStrip1.SuspendLayout();
             statusStrip1.SuspendLayout();
             mainTable.SuspendLayout();
-            tableLayoutPanel2.SuspendLayout();
+            logLayout.SuspendLayout();
             toolStripConnection.SuspendLayout();
-            tableLayoutPanel3.SuspendLayout();
+            connectionBoxesLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)nudPort).BeginInit();
             SuspendLayout();
             // 
@@ -78,7 +77,7 @@
             toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonConnect, toolStripSeparator2, toolStripButtonSave });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(1258, 45);
+            toolStrip1.Size = new Size(881, 31);
             toolStrip1.TabIndex = 10;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -89,14 +88,14 @@
             toolStripButtonConnect.Image = (Image)resources.GetObject("toolStripButtonConnect.Image");
             toolStripButtonConnect.ImageTransparentColor = Color.Magenta;
             toolStripButtonConnect.Name = "toolStripButtonConnect";
-            toolStripButtonConnect.Size = new Size(105, 40);
+            toolStripButtonConnect.Size = new Size(75, 28);
             toolStripButtonConnect.Text = "Connect";
             toolStripButtonConnect.Click += toolStripButtonConnect_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(6, 45);
+            toolStripSeparator2.Size = new Size(6, 31);
             // 
             // toolStripButtonSave
             // 
@@ -106,7 +105,7 @@
             toolStripButtonSave.Image = (Image)resources.GetObject("toolStripButtonSave.Image");
             toolStripButtonSave.ImageTransparentColor = Color.Magenta;
             toolStripButtonSave.Name = "toolStripButtonSave";
-            toolStripButtonSave.Size = new Size(220, 40);
+            toolStripButtonSave.Size = new Size(147, 28);
             toolStripButtonSave.Text = "Verbindung speichern";
             toolStripButtonSave.Click += toolStripButtonSave_Click;
             // 
@@ -114,65 +113,67 @@
             // 
             statusStrip1.ImageScalingSize = new Size(24, 24);
             statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel, toolStripProgressBar });
-            statusStrip1.Location = new Point(0, 629);
+            statusStrip1.Location = new Point(0, 425);
             statusStrip1.Name = "statusStrip1";
-            statusStrip1.Padding = new Padding(1, 0, 18, 0);
-            statusStrip1.Size = new Size(1258, 32);
+            statusStrip1.Padding = new Padding(1, 0, 13, 0);
+            statusStrip1.Size = new Size(881, 24);
             statusStrip1.TabIndex = 12;
             statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabel
             // 
             toolStripStatusLabel.Name = "toolStripStatusLabel";
-            toolStripStatusLabel.Size = new Size(56, 25);
+            toolStripStatusLabel.Size = new Size(41, 19);
             toolStripStatusLabel.Text = "Bereit";
             // 
             // toolStripProgressBar
             // 
             toolStripProgressBar.Name = "toolStripProgressBar";
-            toolStripProgressBar.Size = new Size(125, 24);
+            toolStripProgressBar.Size = new Size(88, 18);
             // 
             // mainTable
             // 
             mainTable.ColumnCount = 1;
             mainTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            mainTable.Controls.Add(tableLayoutPanel2, 0, 1);
-            mainTable.Controls.Add(tableLayoutPanel3, 0, 0);
+            mainTable.Controls.Add(logLayout, 0, 1);
+            mainTable.Controls.Add(connectionBoxesLayout, 0, 0);
             mainTable.Dock = DockStyle.Fill;
-            mainTable.Location = new Point(0, 45);
+            mainTable.Location = new Point(0, 31);
+            mainTable.Margin = new Padding(2);
             mainTable.Name = "mainTable";
             mainTable.RowCount = 2;
             mainTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             mainTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            mainTable.Size = new Size(1258, 584);
+            mainTable.Size = new Size(881, 394);
             mainTable.TabIndex = 15;
             // 
-            // tableLayoutPanel2
+            // logLayout
             // 
-            tableLayoutPanel2.ColumnCount = 1;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Controls.Add(richTextBoxAusgabe, 0, 0);
-            tableLayoutPanel2.Controls.Add(textBoxInput, 0, 2);
-            tableLayoutPanel2.Controls.Add(toolStripConnection, 0, 1);
-            tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(3, 295);
-            tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 3;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 75F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 5F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            tableLayoutPanel2.Size = new Size(1252, 286);
-            tableLayoutPanel2.TabIndex = 16;
+            logLayout.ColumnCount = 1;
+            logLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            logLayout.Controls.Add(richTextBoxAusgabe, 0, 0);
+            logLayout.Controls.Add(textBoxInput, 0, 2);
+            logLayout.Controls.Add(toolStripConnection, 0, 1);
+            logLayout.Dock = DockStyle.Fill;
+            logLayout.Location = new Point(2, 199);
+            logLayout.Margin = new Padding(2);
+            logLayout.Name = "logLayout";
+            logLayout.RowCount = 3;
+            logLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 78.9473648F));
+            logLayout.RowStyles.Add(new RowStyle());
+            logLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 21.0526314F));
+            logLayout.Size = new Size(877, 193);
+            logLayout.TabIndex = 16;
             // 
             // richTextBoxAusgabe
             // 
             richTextBoxAusgabe.BorderStyle = BorderStyle.FixedSingle;
             richTextBoxAusgabe.Dock = DockStyle.Fill;
-            richTextBoxAusgabe.Location = new Point(8, 6);
-            richTextBoxAusgabe.Margin = new Padding(8, 6, 8, 6);
+            richTextBoxAusgabe.Location = new Point(6, 4);
+            richTextBoxAusgabe.Margin = new Padding(6, 4, 6, 4);
             richTextBoxAusgabe.Name = "richTextBoxAusgabe";
             richTextBoxAusgabe.ReadOnly = true;
-            richTextBoxAusgabe.Size = new Size(1236, 202);
+            richTextBoxAusgabe.Size = new Size(865, 119);
             richTextBoxAusgabe.TabIndex = 11;
             richTextBoxAusgabe.Text = "";
             richTextBoxAusgabe.Visible = false;
@@ -181,12 +182,11 @@
             // 
             textBoxInput.BorderStyle = BorderStyle.FixedSingle;
             textBoxInput.Dock = DockStyle.Fill;
-            textBoxInput.Location = new Point(4, 232);
-            textBoxInput.Margin = new Padding(4);
+            textBoxInput.Location = new Point(3, 161);
             textBoxInput.Multiline = true;
             textBoxInput.Name = "textBoxInput";
             textBoxInput.ScrollBars = ScrollBars.Vertical;
-            textBoxInput.Size = new Size(1244, 50);
+            textBoxInput.Size = new Size(871, 29);
             textBoxInput.TabIndex = 13;
             textBoxInput.Visible = false;
             textBoxInput.KeyDown += textBoxInput_KeyDown;
@@ -197,10 +197,10 @@
             toolStripConnection.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             toolStripConnection.GripStyle = ToolStripGripStyle.Hidden;
             toolStripConnection.ImageScalingSize = new Size(24, 24);
-            toolStripConnection.Items.AddRange(new ToolStripItem[] { buttonSetTopic, toolStripSeparator1, toolStripButtonSend, toolStripSeparator3, buttonSubscribe, toolStripSeparator4, buttonUnsubscribe });
-            toolStripConnection.Location = new Point(0, 214);
+            toolStripConnection.Items.AddRange(new ToolStripItem[] { buttonSetTopic, toolStripSeparator1, toolStripButtonSend, toolStripSeparator3, buttonSubscribe, toolStripSeparator4 });
+            toolStripConnection.Location = new Point(0, 127);
             toolStripConnection.Name = "toolStripConnection";
-            toolStripConnection.Size = new Size(1252, 14);
+            toolStripConnection.Size = new Size(877, 31);
             toolStripConnection.TabIndex = 14;
             toolStripConnection.Text = "toolStrip";
             // 
@@ -209,14 +209,14 @@
             buttonSetTopic.Image = BASE.resources.Icon_Zoom;
             buttonSetTopic.ImageTransparentColor = Color.Magenta;
             buttonSetTopic.Name = "buttonSetTopic";
-            buttonSetTopic.Size = new Size(144, 9);
-            buttonSetTopic.Text = "Topic Setzen";
+            buttonSetTopic.Size = new Size(105, 28);
+            buttonSetTopic.Text = "Topic wählen";
             buttonSetTopic.Click += buttonSetTopic_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(6, 14);
+            toolStripSeparator1.Size = new Size(6, 31);
             // 
             // toolStripButtonSend
             // 
@@ -226,7 +226,7 @@
             toolStripButtonSend.Image = (Image)resources.GetObject("toolStripButtonSend.Image");
             toolStripButtonSend.ImageTransparentColor = Color.Magenta;
             toolStripButtonSend.Name = "toolStripButtonSend";
-            toolStripButtonSend.Size = new Size(103, 9);
+            toolStripButtonSend.Size = new Size(75, 28);
             toolStripButtonSend.Text = "Senden";
             toolStripButtonSend.Click += toolStripButtonSend_Click;
             // 
@@ -235,164 +235,152 @@
             toolStripSeparator3.BackColor = SystemColors.ControlDark;
             toolStripSeparator3.ForeColor = SystemColors.ControlDarkDark;
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(6, 14);
+            toolStripSeparator3.Size = new Size(6, 31);
             // 
             // buttonSubscribe
             // 
-            buttonSubscribe.Image = BASE.resources.Icon_Refresh;
+            buttonSubscribe.Image = BASE.resources.Icon_Connect;
             buttonSubscribe.ImageTransparentColor = Color.Magenta;
             buttonSubscribe.Name = "buttonSubscribe";
-            buttonSubscribe.Size = new Size(121, 9);
-            buttonSubscribe.Text = "Subscribe";
-            buttonSubscribe.Click += buttonSubscribeClick;
+            buttonSubscribe.Size = new Size(107, 28);
+            buttonSubscribe.Text = "Subscriptions";
+            buttonSubscribe.Click += ManageSubscriptions;
             // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
-            toolStripSeparator4.Size = new Size(6, 14);
+            toolStripSeparator4.Size = new Size(6, 31);
             // 
-            // buttonUnsubscribe
+            // connectionBoxesLayout
             // 
-            buttonUnsubscribe.Image = BASE.resources.Icon_Close;
-            buttonUnsubscribe.ImageTransparentColor = Color.Magenta;
-            buttonUnsubscribe.Name = "buttonUnsubscribe";
-            buttonUnsubscribe.Size = new Size(143, 9);
-            buttonUnsubscribe.Text = "Unsubscribe";
-            buttonUnsubscribe.Click += buttonUnsubscribeClick;
-            // 
-            // tableLayoutPanel3
-            // 
-            tableLayoutPanel3.ColumnCount = 2;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 13.8178911F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 86.182106F));
-            tableLayoutPanel3.Controls.Add(tbPasswort, 1, 4);
-            tableLayoutPanel3.Controls.Add(label5, 0, 4);
-            tableLayoutPanel3.Controls.Add(label2, 0, 1);
-            tableLayoutPanel3.Controls.Add(tbAdresse, 1, 0);
-            tableLayoutPanel3.Controls.Add(tbUsername, 1, 3);
-            tableLayoutPanel3.Controls.Add(nudPort, 1, 1);
-            tableLayoutPanel3.Controls.Add(label4, 0, 3);
-            tableLayoutPanel3.Controls.Add(tbClientId, 1, 2);
-            tableLayoutPanel3.Controls.Add(label3, 0, 2);
-            tableLayoutPanel3.Controls.Add(label1, 0, 0);
-            tableLayoutPanel3.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Location = new Point(3, 3);
-            tableLayoutPanel3.Name = "tableLayoutPanel3";
-            tableLayoutPanel3.RowCount = 5;
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            tableLayoutPanel3.Size = new Size(1252, 286);
-            tableLayoutPanel3.TabIndex = 17;
+            connectionBoxesLayout.ColumnCount = 2;
+            connectionBoxesLayout.ColumnStyles.Add(new ColumnStyle());
+            connectionBoxesLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            connectionBoxesLayout.Controls.Add(tbPasswort, 1, 4);
+            connectionBoxesLayout.Controls.Add(label5, 0, 4);
+            connectionBoxesLayout.Controls.Add(label2, 0, 1);
+            connectionBoxesLayout.Controls.Add(tbAdresse, 1, 0);
+            connectionBoxesLayout.Controls.Add(tbUsername, 1, 3);
+            connectionBoxesLayout.Controls.Add(nudPort, 1, 1);
+            connectionBoxesLayout.Controls.Add(label4, 0, 3);
+            connectionBoxesLayout.Controls.Add(tbClientId, 1, 2);
+            connectionBoxesLayout.Controls.Add(label3, 0, 2);
+            connectionBoxesLayout.Controls.Add(label1, 0, 0);
+            connectionBoxesLayout.Dock = DockStyle.Fill;
+            connectionBoxesLayout.Location = new Point(2, 2);
+            connectionBoxesLayout.Margin = new Padding(2);
+            connectionBoxesLayout.Name = "connectionBoxesLayout";
+            connectionBoxesLayout.RowCount = 5;
+            connectionBoxesLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            connectionBoxesLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            connectionBoxesLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            connectionBoxesLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            connectionBoxesLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            connectionBoxesLayout.Size = new Size(877, 193);
+            connectionBoxesLayout.TabIndex = 17;
             // 
             // tbPasswort
             // 
-            tbPasswort.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            tbPasswort.Location = new Point(177, 241);
-            tbPasswort.Margin = new Padding(4);
+            tbPasswort.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tbPasswort.Location = new Point(112, 163);
             tbPasswort.Name = "tbPasswort";
             tbPasswort.PasswordChar = '*';
-            tbPasswort.Size = new Size(1071, 31);
+            tbPasswort.Size = new Size(762, 25);
             tbPasswort.TabIndex = 4;
             // 
             // label5
             // 
-            label5.AutoSize = true;
-            label5.Dock = DockStyle.Left;
-            label5.Location = new Point(4, 228);
-            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.BackColor = SystemColors.Control;
+            label5.Dock = DockStyle.Fill;
+            label5.Font = new Font("Segoe UI", 9F);
+            label5.Location = new Point(3, 160);
+            label5.MaximumSize = new Size(105, 40);
             label5.Name = "label5";
-            label5.Size = new Size(82, 58);
+            label5.Size = new Size(103, 40);
             label5.TabIndex = 9;
             label5.Text = "Passwort";
-            label5.TextAlign = ContentAlignment.MiddleCenter;
+            label5.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label2
             // 
-            label2.AutoSize = true;
-            label2.Dock = DockStyle.Left;
-            label2.Location = new Point(4, 57);
-            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Dock = DockStyle.Fill;
+            label2.Font = new Font("Segoe UI", 9F);
+            label2.Location = new Point(3, 40);
+            label2.MaximumSize = new Size(105, 40);
             label2.Name = "label2";
-            label2.Size = new Size(52, 57);
+            label2.Size = new Size(103, 40);
             label2.TabIndex = 6;
             label2.Text = "Port*";
-            label2.TextAlign = ContentAlignment.MiddleCenter;
+            label2.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // tbAdresse
             // 
-            tbAdresse.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            tbAdresse.Location = new Point(177, 13);
-            tbAdresse.Margin = new Padding(4);
+            tbAdresse.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tbAdresse.Location = new Point(112, 3);
             tbAdresse.Name = "tbAdresse";
-            tbAdresse.Size = new Size(1071, 31);
+            tbAdresse.Size = new Size(762, 25);
             tbAdresse.TabIndex = 0;
             // 
             // tbUsername
             // 
-            tbUsername.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            tbUsername.Location = new Point(177, 184);
-            tbUsername.Margin = new Padding(4);
+            tbUsername.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tbUsername.Location = new Point(112, 123);
             tbUsername.Name = "tbUsername";
-            tbUsername.Size = new Size(1071, 31);
+            tbUsername.Size = new Size(762, 25);
             tbUsername.TabIndex = 3;
             // 
             // nudPort
             // 
-            nudPort.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            nudPort.Location = new Point(177, 70);
-            nudPort.Margin = new Padding(4);
+            nudPort.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            nudPort.Location = new Point(112, 43);
             nudPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
             nudPort.Name = "nudPort";
-            nudPort.Size = new Size(1071, 31);
+            nudPort.Size = new Size(762, 25);
             nudPort.TabIndex = 1;
             // 
             // label4
             // 
-            label4.AutoSize = true;
-            label4.Dock = DockStyle.Left;
-            label4.Location = new Point(4, 171);
-            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Dock = DockStyle.Fill;
+            label4.Font = new Font("Segoe UI", 9F);
+            label4.Location = new Point(3, 120);
+            label4.MaximumSize = new Size(105, 40);
             label4.Name = "label4";
-            label4.Size = new Size(91, 57);
+            label4.Size = new Size(103, 40);
             label4.TabIndex = 8;
             label4.Text = "Username";
-            label4.TextAlign = ContentAlignment.MiddleCenter;
+            label4.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // tbClientId
             // 
-            tbClientId.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            tbClientId.Location = new Point(177, 127);
-            tbClientId.Margin = new Padding(4);
+            tbClientId.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tbClientId.Location = new Point(112, 83);
             tbClientId.Name = "tbClientId";
-            tbClientId.Size = new Size(1071, 31);
+            tbClientId.Size = new Size(762, 25);
             tbClientId.TabIndex = 2;
             // 
             // label3
             // 
-            label3.AutoSize = true;
-            label3.Dock = DockStyle.Left;
-            label3.Location = new Point(4, 114);
-            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Dock = DockStyle.Fill;
+            label3.Font = new Font("Segoe UI", 9F);
+            label3.Location = new Point(3, 80);
+            label3.MaximumSize = new Size(105, 40);
             label3.Name = "label3";
-            label3.Size = new Size(89, 57);
+            label3.Size = new Size(103, 40);
             label3.TabIndex = 7;
             label3.Text = "Client-ID*";
-            label3.TextAlign = ContentAlignment.MiddleCenter;
+            label3.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label1
             // 
-            label1.AutoSize = true;
-            label1.Dock = DockStyle.Left;
-            label1.Location = new Point(4, 0);
-            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Dock = DockStyle.Fill;
+            label1.Font = new Font("Segoe UI", 9F);
+            label1.Location = new Point(3, 0);
+            label1.MaximumSize = new Size(105, 40);
             label1.Name = "label1";
-            label1.Size = new Size(141, 57);
+            label1.Size = new Size(103, 40);
             label1.TabIndex = 5;
             label1.Text = "Broker-Adresse*";
-            label1.TextAlign = ContentAlignment.MiddleCenter;
+            label1.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // miniToolStrip
             // 
@@ -419,26 +407,25 @@
             // 
             // ConnectToBrokerControl
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             BorderStyle = BorderStyle.FixedSingle;
             Controls.Add(mainTable);
             Controls.Add(statusStrip1);
             Controls.Add(toolStrip1);
-            Margin = new Padding(4);
             Name = "ConnectToBrokerControl";
-            Size = new Size(1258, 661);
+            Size = new Size(881, 449);
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             statusStrip1.ResumeLayout(false);
             statusStrip1.PerformLayout();
             mainTable.ResumeLayout(false);
-            tableLayoutPanel2.ResumeLayout(false);
-            tableLayoutPanel2.PerformLayout();
+            logLayout.ResumeLayout(false);
+            logLayout.PerformLayout();
             toolStripConnection.ResumeLayout(false);
             toolStripConnection.PerformLayout();
-            tableLayoutPanel3.ResumeLayout(false);
-            tableLayoutPanel3.PerformLayout();
+            connectionBoxesLayout.ResumeLayout(false);
+            connectionBoxesLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)nudPort).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -452,10 +439,10 @@
         private ToolStripStatusLabel toolStripStatusLabel;
         private ToolStripProgressBar toolStripProgressBar;
         private TableLayoutPanel mainTable;
-        private TableLayoutPanel tableLayoutPanel2;
+        private TableLayoutPanel logLayout;
         private RichTextBox richTextBoxAusgabe;
         private TextBox textBoxInput;
-        private TableLayoutPanel tableLayoutPanel3;
+        private TableLayoutPanel connectionBoxesLayout;
         private TextBox tbPasswort;
         private Label label1;
         private Label label5;
@@ -471,7 +458,6 @@
         private ToolStrip toolStripConnection;
         private ToolStripButton buttonSetTopic;
         private ToolStripButton buttonSubscribe;
-        private ToolStripButton buttonUnsubscribe;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripButton toolStripButtonSend;

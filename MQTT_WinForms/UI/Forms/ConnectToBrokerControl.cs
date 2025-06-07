@@ -1,17 +1,20 @@
-﻿using MQTT_WinForms.BASE;
+using MQTT_WinForms.BASE;
 using MQTT_WinForms.DB;
 using MQTT_WinForms.DB.Enums;
 using MQTT_WinForms.DB.Objects;
 using MQTT_WinForms.MQTT;
-using MQTT_WinForms.UI.Forms;
+using MQTTnet.Protocol;
 using Message = MQTT_WinForms.DB.Objects.Message;
 
-namespace MQTT_WinForms.Forms
+namespace MQTT_WinForms.UI.Forms
 {
     public partial class ConnectToBrokerControl : UserControl
     {
-        public MQTTWrapper? Wrapper { get; private set; }
-        public string Topic { get; private set; } = "default";
+        private MQTTWrapper? Wrapper { get; set; }
+        private string PublishTopic { get; set; } = "default";
+        private MqttQualityOfServiceLevel PublishQOS { get; set; } = MqttQualityOfServiceLevel.AtMostOnce;
+
+        private Connection? Connection { get; set; }
 
         public ConnectToBrokerControl()
         {
@@ -30,84 +33,58 @@ namespace MQTT_WinForms.Forms
 
         private async Task<bool> Connect(MQTTWrapper wrapper)
         {
-            if (wrapper == null || wrapper.Options == null)
+            if (wrapper?.Options == null)
                 return false;
 
             TaskCompletionSource<bool> tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            wrapper.Connected += (sender, args) =>
-            {
-                tcs.TrySetResult(true);
-            };
+            wrapper.Connected += (sender, args) => tcs.TrySetResult(true);
 
-            var status = await wrapper.ConnectAsync();
+            MqttClientHelper.Status status = await wrapper.ConnectAsync();
 
-            if (status != MqttClientHelper.Status.Success)
-            {
-                tcs.TrySetResult(false);
-            }
+            if (status != MqttClientHelper.Status.Success) tcs.TrySetResult(false);
 
             Task completion = await Task.WhenAny(tcs.Task, Task.Delay(wrapper.Options.Timeout));
 
-            if (completion == tcs.Task)
-            {
-                return await tcs.Task;
-            }
-            else
-            {
-                return false;
-            }
+            if (completion == tcs.Task) return await tcs.Task;
+
+            return false;
         }
 
         private async Task<bool> TryPublish(string text)
         {
-            if (Wrapper == null || Wrapper.Options == null)
+            if (Wrapper?.Options == null)
                 return false;
 
             TaskCompletionSource<bool> tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            var status = await Wrapper.PublishAsync(Topic, text);
+            MqttClientHelper.Status status = await Wrapper.PublishAsync(PublishTopic, text, qos: PublishQOS);
 
-            if (status != MqttClientHelper.Status.Success)
-            {
-                tcs.TrySetResult(false);
-            }
-            else
-            {
-                tcs.TrySetResult(true);
-            }
+            tcs.TrySetResult(status == MqttClientHelper.Status.Success);
 
             Task completion = await Task.WhenAny(tcs.Task, Task.Delay(Wrapper.Options.Timeout));
 
-            if (completion == tcs.Task)
-            {
-                return await tcs.Task;
-            }
-            else
-            {
-                return false;
-            }
+            if (completion == tcs.Task) return await tcs.Task;
+
+            return false;
         }
 
         private async void toolStripButtonConnect_Click(object sender, EventArgs e)
         {
             MainForm? form = (MainForm?)ParentForm;
-            if (form == null || form.tabControl.SelectedTab == null)
-                return;
+            if (form?.tabControl.SelectedTab == null) return;
 
             form.tabControl.SelectedTab.Text = tbAdresse.Text;
 
             toolStripProgressBar.Value = 25;
             toolStripStatusLabel.Text = "Verbinde...";
 
-
             ConnectionData connectionData = new()
             {
                 Address = tbAdresse.Text,
                 Port = Convert.ToInt32(nudPort.Value),
-                ClientID = tbClientId.Text,
                 Username = tbUsername.Text,
-                Password = tbPasswort.Text,
+                Password = tbPasswort.Text
             };
             toolStripProgressBar.Value = 60;
 
@@ -118,17 +95,40 @@ namespace MQTT_WinForms.Forms
             bool result = await Connect(Wrapper);
             if (result)
             {
+                //connection ist null wenn neu. wenn vorherige geladen, dann nicht
+                await using DataBaseContext context = new();
+                Connection? existingConnection = context.Connections
+                                                        .FirstOrDefault(x => x.Host == connectionData.Address &&
+                                                                                     x.Port == connectionData.Port &&
+                                                                                     x.Username == connectionData.Username &&
+                                                                                     x.Password == connectionData.Password);
+                if (existingConnection == null)
+                {
+                    existingConnection = new Connection
+                    {
+                        Username = connectionData.Username,
+                        Password = connectionData.Password,
+                        Host = connectionData.Address,
+                        Port = connectionData.Port
+                    };
+
+                    await context.Connections.AddAsync(existingConnection);
+                    await context.SaveChangesAsync();
+                }
+
+                Connection = existingConnection;
+
+                ToggleView();
+
                 toolStripStatusLabel.Text = "Verbindung erfolgreich!";
-                toolStripProgressBar.BackColor = Color.Green;
                 toolStripButtonSave.Enabled = true;
                 toolStripButtonSend.Enabled = true;
-                ToggleView();
             }
             else
             {
                 toolStripStatusLabel.Text = "Keine Verbindung möglich!";
-                toolStripProgressBar.BackColor = Color.Red;
             }
+
             toolStripProgressBar.Value = 100;
         }
 
@@ -144,8 +144,6 @@ namespace MQTT_WinForms.Forms
                 mainTable.RowStyles[0].Height = 100;
                 mainTable.RowStyles[1].Height = 0;
             }
-
-
         }
 
         private async void toolStripButtonSave_Click(object sender, EventArgs e)
@@ -158,7 +156,7 @@ namespace MQTT_WinForms.Forms
                 Connection connection = new()
                 {
                     Host = tbAdresse.Text,
-                    Port = Decimal.ToInt32(nudPort.Value),
+                    Port = decimal.ToInt32(nudPort.Value),
                     Username = tbUsername.Text,
                     Password = tbPasswort.Text
                 };
@@ -167,7 +165,6 @@ namespace MQTT_WinForms.Forms
                 await context.SaveChangesAsync();
 
                 toolStripStatusLabel.Text = "Verbindung gespeichert";
-
             }
             catch
             {
@@ -175,27 +172,34 @@ namespace MQTT_WinForms.Forms
             }
         }
 
-        public void SetConnection(Connection connection)
+        public async Task SetConnection(Connection connection)
         {
             tbAdresse.Text = connection.Host;
             nudPort.Value = connection.Port;
             tbUsername.Text = connection.Username;
             tbPasswort.Text = connection.Password;
+
+            await using DataBaseContext context = new();
+            if (!context.Connections.Contains(connection))
+            {
+                await context.Connections.AddAsync(connection);
+                await context.SaveChangesAsync();
+            }
         }
 
         private async void toolStripButtonTopic_Click(object sender, EventArgs e)
         {
-            string? topic = InputBox.Show("Topic eingeben:");
+            string? topic = InputBox.Show("PublishTopic eingeben:");
             if (Wrapper == null || string.IsNullOrEmpty(topic))
                 return;
 
-            Topic = topic;
-            await Wrapper.SubscribeAsync(Topic);
+            PublishTopic = topic;
+            await Wrapper.SubscribeAsync(PublishTopic);
         }
 
         private async void textBoxInput_KeyDown(object? sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter && !e.Shift)
+            if (e is { KeyCode: Keys.Enter, Shift: false })
             {
                 e.SuppressKeyPress = true;
                 await SendMessageAsync();
@@ -211,10 +215,11 @@ namespace MQTT_WinForms.Forms
 
                 if (result)
                 {
-                    string formattedTest = $"[SEND] {DateTime.Now.ToString("HH:mm:ss")} - {messageText}";
-                    richTextBoxAusgabe.AppendText(formattedTest + "\n");
+                    string formattedTest =
+                        $"[SEND] {PublishTopic}:{(int)PublishQOS} {DateTime.Now:HH:mm:ss} - {messageText}";
+                    richTextBoxAusgabe.AppendText(formattedTest + Environment.NewLine);
                     toolStripStatusLabel.Text = "Erfolgreich gesendet";
-                    await LogSentMessageAsync(Topic, messageText);
+                    await LogSentMessageAsync(PublishTopic, messageText);
                     textBoxInput.Text = string.Empty;
                 }
                 else
@@ -228,40 +233,38 @@ namespace MQTT_WinForms.Forms
             }
         }
 
-        private void tbClientId_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void buttonSetTopic_Click(object sender, EventArgs e)
         {
-            string? topic = InputBox.Show("Topic für Publish eingeben:");
-            if (Wrapper == null || string.IsNullOrEmpty(topic))
+            if (Wrapper == null)
                 return;
 
-            Topic = topic;
-            toolStripStatusLabel.Text = $"Topic ist jetzt '{Topic}'";
+            UserInput.InputResult? result = UserInput.QueryUser(PublishTopic, PublishQOS);
+            if (!result.HasValue) return;
+            PublishTopic = result.Value.Topic;
+            PublishQOS = result.Value.QualityOfService;
+            toolStripStatusLabel.Text = $"Topic ist jetzt '{PublishTopic}' mit Quality of Service {(int)PublishQOS}";
         }
 
-        private void buttonSubscribeClick(object sender, EventArgs e)
+        private void ManageSubscriptions(object sender, EventArgs e)
         {
+            using (DataBaseContext context = new())
+            {
+                if (Connection == null) return;
 
-        }
-
-        private void buttonUnsubscribeClick(object sender, EventArgs e)
-        {
-
+                ManageSubscriptionsForm.Manage(Connection);
+            }
         }
 
         private async Task LogSentMessageAsync(string topic, string messageText)
         {
             try
             {
-                await using var context = new DataBaseContext();
-                var log = new Message
+                await using DataBaseContext context = new();
+                Message log = new()
                 {
                     Topic = topic,
                     MessageText = messageText,
+                    Timestamp = DateTime.Now,
                     Direction = MessageDirection.Sent
                 };
                 context.Messages.Add(log);

@@ -1,10 +1,9 @@
 using MQTT_WinForms.BASE;
 using MQTT_WinForms.DB;
 using MQTT_WinForms.DB.Objects;
-using MQTT_WinForms.Forms;
-using MQTT_WinForms.Properties;
 using MQTT_WinForms.UI.Helpers;
 using System.Runtime.InteropServices;
+using MQTT_WinForms.UI.Forms;
 
 namespace MQTT_WinForms
 {
@@ -13,10 +12,15 @@ namespace MQTT_WinForms
         public MainForm()
         {
             InitializeComponent();
-            TabPage tabPage = TabHelper.WelcomeTab(tabControl);
+            TabHelper.WelcomeTab(tabControl);
         }
 
-        private static void CloseTabClick(object sender, EventArgs e)
+        [DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
+
+        private const int TCM_SETMINTABWIDTH = 0x1300 + 49;
+
+        private void CloseTabClick(object sender, EventArgs e)
         {
             MainForm mainForm = TabHelper.GetMainForm(sender);
 
@@ -27,7 +31,7 @@ namespace MQTT_WinForms
             }
         }
 
-        private static void NewConnectionClick(object sender, EventArgs e)
+        private void NewConnectionClick(object sender, EventArgs e)
         {
             MainForm mainForm = TabHelper.GetMainForm(sender);
             TabPage tabPage = TabHelper.NewConnectionTab();
@@ -39,23 +43,36 @@ namespace MQTT_WinForms
         {
             await using DataBaseContext context = new();
 
-            Connection? lastConnection = context.Connections
-                .AsEnumerable()
-                .OrderBy(x => Math.Abs((x.CreationTime - DateTime.Now).Ticks))
-                .FirstOrDefault();
+            List<Connection> connections = context.Connections
+                                                  .AsEnumerable()
+                                                  .OrderBy(x => Math.Abs((x.CreationTime - DateTime.Now).Ticks))
+                                                  .ToList();
 
-            if (lastConnection != null)
+            if (connections.Count == 0)
+            {
+                MessageBox.Show("Keine vorherigen Verbindungen.", "Fehler", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                return;
+            }
+
+            Connection? result = LoadConnectionForm.QueryUser(connections);
+            if (result != null)
             {
                 MainForm mainForm = TabHelper.GetMainForm(sender);
                 TabPage connectionTab = TabHelper.NewConnectionTab();
 
                 ConnectToBrokerControl? connectionControl = connectionTab.Controls.OfType<ConnectToBrokerControl>().FirstOrDefault();
-                connectionControl?.SetConnection(lastConnection);
+                await connectionControl?.SetConnection(result)!;
 
                 mainForm.tabControl.TabPages.Add(connectionTab);
                 mainForm.tabControl.SelectedTab = connectionTab;
             }
+        }
 
+        private void TabControlOnHandleCreated(object? sender, EventArgs e)
+        {
+            SendMessage(tabControl.Handle, TCM_SETMINTABWIDTH, IntPtr.Zero, 16);
         }
 
         private void TabControl_DrawItem(object? sender, DrawItemEventArgs e)
@@ -64,27 +81,23 @@ namespace MQTT_WinForms
             Rectangle tabRect = tabControl.GetTabRect(e.Index);
             tabRect.Inflate(-2, -2);
 
-            Bitmap closeImage = resources.Icon_Close;
-
-            int iconPadding = 4;
-            Rectangle textRect = new Rectangle(tabRect.X, tabRect.Y, tabRect.Width - closeImage.Width - iconPadding, tabRect.Height);
-
-            TextRenderer.DrawText(e.Graphics, tabPage.Text, tabPage.Font, textRect, tabPage.ForeColor, TextFormatFlags.Left);
-
-            int iconX = tabRect.Right - closeImage.Width;
-            int iconY = tabRect.Top + (tabRect.Height - closeImage.Height) / 2;
-            e.Graphics.DrawImage(closeImage, iconX, iconY);
+            Bitmap? closeImage = resources.Close;
+            e.Graphics.DrawImage(closeImage,
+                tabRect.Right - closeImage.Width,
+                tabRect.Top + (tabRect.Height - closeImage.Height) / 2);
+            TextRenderer.DrawText(e.Graphics, tabPage.Text, tabPage.Font,
+                tabRect, tabPage.ForeColor, TextFormatFlags.Left);
         }
 
         private void TabControl_MouseDown(object? sender, MouseEventArgs e)
         {
-            for (var i = 0; i < tabControl.TabPages.Count; i++)
+            for (int i = 0; i < tabControl.TabPages.Count; i++)
             {
-                var tabRect = tabControl.GetTabRect(i);
+                Rectangle tabRect = tabControl.GetTabRect(i);
                 tabRect.Inflate(-2, -2);
-                var closeImage = resources.Icon_Close;
-                var imageRect = new Rectangle(
-                    (tabRect.Right - closeImage.Width),
+                Bitmap? closeImage = resources.Icon_Close;
+                Rectangle imageRect = new(
+                    tabRect.Right - closeImage.Width,
                     tabRect.Top + (tabRect.Height - closeImage.Height) / 2,
                     closeImage.Width,
                     closeImage.Height);

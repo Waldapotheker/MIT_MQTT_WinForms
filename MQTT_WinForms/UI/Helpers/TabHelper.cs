@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualBasic.ApplicationServices;
+using Microsoft.VisualBasic.ApplicationServices;
 using MQTT_WinForms.Forms;
 using System;
 using System.CodeDom;
@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MQTT_WinForms.BASE;
+using MQTT_WinForms.UI.Forms;
 
 namespace MQTT_WinForms.UI.Helpers
 {
@@ -24,7 +26,7 @@ namespace MQTT_WinForms.UI.Helpers
             tabPage.Text = "Willkommen";
             WelcomeControl welcomeControl = new()
             {
-                BackgroundImage = Properties.Resources.MQTT_Image,
+                BackgroundImage = resources.mqtt_ver,
                 BackgroundImageLayout = ImageLayout.Stretch,
                 Dock = DockStyle.Fill,
                 Size = tabPage.Size,
