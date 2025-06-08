@@ -13,7 +13,7 @@ namespace MQTT_WinForms.UI.Forms
 
         public void AddEntry(Message message)
         {
-            string status = message.Direction == MessageDirection.Received ? "Recieve" : "Send";
+            string status = message.Direction == MessageDirection.Received ? "Receive" : "Send";
             dataGrid.Rows.Add(status, message.Topic, message.QoSLevel, message.Timestamp, message.MessageText);
         }
 
