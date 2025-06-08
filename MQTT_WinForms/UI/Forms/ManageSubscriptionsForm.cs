@@ -125,7 +125,16 @@ namespace MQTT_WinForms.UI.Forms
             {
                 ConnectToBrokerControl? control = TryGetBrokerControl();
                 if (control?.Wrapper != null)
-                    await control.Wrapper.SubscribeAsync(item.Subscription, control.GetLogControl().AddLogEntry);
+                {
+                    if (item.Subscription.IsActive)
+                    {
+                        await control.Wrapper.UnsubscribeAsync(item.Subscription, control.GetLogControl().AddLogEntry);
+                    }
+                    else
+                    {
+                        await control.Wrapper.SubscribeAsync(item.Subscription, control.GetLogControl().AddLogEntry);
+                    }
+                }
 
                 btSubscribe.Text = item.Subscription.IsActive ? "Unsubscribe" : "Subscribe";
             }

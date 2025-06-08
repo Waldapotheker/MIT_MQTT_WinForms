@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+using System.Diagnostics;
 using MQTT_WinForms.BASE;
 using MQTT_WinForms.DB;
 using MQTT_WinForms.DB.Enums;
@@ -6,6 +8,7 @@ using MQTT_WinForms.MQTT;
 using MQTT_WinForms.UI.Helpers;
 using MQTTnet.Protocol;
 using System.Text;
+using System.Threading.Channels;
 using Message = MQTT_WinForms.DB.Objects.Message;
 
 namespace MQTT_WinForms.UI.Forms
@@ -16,6 +19,11 @@ namespace MQTT_WinForms.UI.Forms
         private string PublishTopic { get; set; } = "default";
         private MqttQualityOfServiceLevel PublishQOS { get; set; } = MqttQualityOfServiceLevel.AtMostOnce;
         private Connection? Connection { get; set; }
+
+        private readonly Channel<MQTTWrapper.MessageEventArgs> channel = Channel.CreateBounded<MQTTWrapper.MessageEventArgs>(new BoundedChannelOptions(100)
+        {
+            FullMode = BoundedChannelFullMode.Wait
+        });
 
         public ConnectToBrokerControl()
         {
@@ -129,6 +137,8 @@ namespace MQTT_WinForms.UI.Forms
                 toolStripButtonSend.Enabled = true;
                 buttonExport.Enabled = true;
                 btClear.Enabled = true;
+
+                _ = Task.Run(ProcessMessageChannel);
             }
             else
             {
@@ -277,13 +287,37 @@ namespace MQTT_WinForms.UI.Forms
             }
         }
 
-        private async void OnMessageReceived(object? sender, MQTTWrapper.MessageEventArgs e)
+        private async Task ProcessMessageChannel()
         {
-            if (Connection == null) return;
+            while (await channel.Reader.WaitToReadAsync())
+            {
+                while (channel.Reader.TryRead(out MQTTWrapper.MessageEventArgs item))
+                {
+                    try
+                    {
+                        await SaveMessage(item);
+                    }
+                    catch
+                    {
+                        toolStripStatusLabel.Text = "Fehler beim Speichern von Nachricht";
+                    }
+                }
+            }
+        }
+
+        private async Task SaveMessage(MQTTWrapper.MessageEventArgs e)
+        {
+            if (Connection == null)
+            {
+                return;
+            }
 
             try
             {
                 await using DataBaseContext context = new();
+
+                context.Connections.Attach(Connection);
+
                 Message log = new()
                 {
                     Connection = Connection,
@@ -303,6 +337,11 @@ namespace MQTT_WinForms.UI.Forms
             {
                 toolStripStatusLabel.Text = "Fehler beim Speichern empfangener Nachricht";
             }
+        }
+
+        private void OnMessageReceived(object? sender, MQTTWrapper.MessageEventArgs e)
+        {
+            channel.Writer.TryWrite(e);
         }
 
         private void buttonSetTopic_Click(object sender, EventArgs e)
@@ -332,6 +371,9 @@ namespace MQTT_WinForms.UI.Forms
             try
             {
                 await using DataBaseContext context = new();
+
+                context.Connections.Attach(Connection);
+
                 Message log = new()
                 {
                     Connection = Connection,
