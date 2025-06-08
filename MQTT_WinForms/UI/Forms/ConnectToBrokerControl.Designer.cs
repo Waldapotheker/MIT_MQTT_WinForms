@@ -34,9 +34,10 @@
             toolStripSeparator2 = new ToolStripSeparator();
             toolStripButtonSave = new ToolStripButton();
             toolStripSeparator5 = new ToolStripSeparator();
-            toolStripSeparator6 = new ToolStripSeparator();
             btClear = new ToolStripButton();
+            toolStripSeparator6 = new ToolStripSeparator();
             buttonExport = new ToolStripButton();
+            toolStripSeparator7 = new ToolStripSeparator();
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel = new ToolStripStatusLabel();
             toolStripProgressBar = new ToolStripProgressBar();
@@ -78,7 +79,7 @@
             toolStrip1.AutoSize = false;
             toolStrip1.GripStyle = ToolStripGripStyle.Hidden;
             toolStrip1.ImageScalingSize = new Size(20, 20);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonConnect, toolStripSeparator2, toolStripButtonSave, toolStripSeparator5, toolStripSeparator6, btClear, buttonExport });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonConnect, toolStripSeparator2, toolStripButtonSave, toolStripSeparator5, btClear, toolStripSeparator6, buttonExport, toolStripSeparator7 });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(881, 31);
@@ -118,11 +119,6 @@
             toolStripSeparator5.Name = "toolStripSeparator5";
             toolStripSeparator5.Size = new Size(6, 31);
             // 
-            // toolStripSeparator6
-            // 
-            toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new Size(6, 31);
-            // 
             // btClear
             // 
             btClear.Enabled = false;
@@ -134,6 +130,11 @@
             btClear.Text = "Protokoll leeren";
             btClear.Click += btClear_Click;
             // 
+            // toolStripSeparator6
+            // 
+            toolStripSeparator6.Name = "toolStripSeparator6";
+            toolStripSeparator6.Size = new Size(6, 31);
+            // 
             // buttonExport
             // 
             buttonExport.Enabled = false;
@@ -144,6 +145,11 @@
             buttonExport.Size = new Size(142, 28);
             buttonExport.Text = "Protokoll exportieren";
             buttonExport.Click += buttonExport_Click;
+            // 
+            // toolStripSeparator7
+            // 
+            toolStripSeparator7.Name = "toolStripSeparator7";
+            toolStripSeparator7.Size = new Size(6, 31);
             // 
             // statusStrip1
             // 
@@ -498,5 +504,6 @@
         private ToolStripButton btClear;
         private ToolStripSeparator toolStripSeparator6;
         private ToolStripButton buttonExport;
+        private ToolStripSeparator toolStripSeparator7;
     }
 }
