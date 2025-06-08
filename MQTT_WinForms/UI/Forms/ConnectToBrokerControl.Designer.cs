@@ -33,12 +33,15 @@
             toolStripButtonConnect = new ToolStripButton();
             toolStripSeparator2 = new ToolStripSeparator();
             toolStripButtonSave = new ToolStripButton();
+            toolStripSeparator5 = new ToolStripSeparator();
+            toolStripSeparator6 = new ToolStripSeparator();
+            btClear = new ToolStripButton();
+            buttonExport = new ToolStripButton();
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel = new ToolStripStatusLabel();
             toolStripProgressBar = new ToolStripProgressBar();
             mainTable = new TableLayoutPanel();
             logLayout = new TableLayoutPanel();
-            richTextBoxAusgabe = new RichTextBox();
             textBoxInput = new TextBox();
             toolStripConnection = new ToolStrip();
             buttonSetTopic = new ToolStripButton();
@@ -47,6 +50,7 @@
             toolStripSeparator3 = new ToolStripSeparator();
             buttonSubscribe = new ToolStripButton();
             toolStripSeparator4 = new ToolStripSeparator();
+            messageLog = new MessageLogControl();
             connectionBoxesLayout = new TableLayoutPanel();
             tbPasswort = new TextBox();
             label5 = new Label();
@@ -74,7 +78,7 @@
             toolStrip1.AutoSize = false;
             toolStrip1.GripStyle = ToolStripGripStyle.Hidden;
             toolStrip1.ImageScalingSize = new Size(20, 20);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonConnect, toolStripSeparator2, toolStripButtonSave });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonConnect, toolStripSeparator2, toolStripButtonSave, toolStripSeparator5, toolStripSeparator6, btClear, buttonExport });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(881, 31);
@@ -108,6 +112,38 @@
             toolStripButtonSave.Size = new Size(147, 28);
             toolStripButtonSave.Text = "Verbindung speichern";
             toolStripButtonSave.Click += toolStripButtonSave_Click;
+            // 
+            // toolStripSeparator5
+            // 
+            toolStripSeparator5.Name = "toolStripSeparator5";
+            toolStripSeparator5.Size = new Size(6, 31);
+            // 
+            // toolStripSeparator6
+            // 
+            toolStripSeparator6.Name = "toolStripSeparator6";
+            toolStripSeparator6.Size = new Size(6, 31);
+            // 
+            // btClear
+            // 
+            btClear.Enabled = false;
+            btClear.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            btClear.Image = BASE.resources.Icon_Trash;
+            btClear.ImageTransparentColor = Color.Magenta;
+            btClear.Name = "btClear";
+            btClear.Size = new Size(114, 28);
+            btClear.Text = "Protokoll leeren";
+            btClear.Click += btClear_Click;
+            // 
+            // buttonExport
+            // 
+            buttonExport.Enabled = false;
+            buttonExport.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            buttonExport.Image = BASE.resources.Icon_OpenFolder;
+            buttonExport.ImageTransparentColor = Color.Magenta;
+            buttonExport.Name = "buttonExport";
+            buttonExport.Size = new Size(142, 28);
+            buttonExport.Text = "Protokoll exportieren";
+            buttonExport.Click += buttonExport_Click;
             // 
             // statusStrip1
             // 
@@ -151,9 +187,9 @@
             // 
             logLayout.ColumnCount = 1;
             logLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            logLayout.Controls.Add(richTextBoxAusgabe, 0, 0);
             logLayout.Controls.Add(textBoxInput, 0, 2);
             logLayout.Controls.Add(toolStripConnection, 0, 1);
+            logLayout.Controls.Add(messageLog, 0, 0);
             logLayout.Dock = DockStyle.Fill;
             logLayout.Location = new Point(2, 199);
             logLayout.Margin = new Padding(2);
@@ -164,19 +200,6 @@
             logLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 21.0526314F));
             logLayout.Size = new Size(877, 193);
             logLayout.TabIndex = 16;
-            // 
-            // richTextBoxAusgabe
-            // 
-            richTextBoxAusgabe.BorderStyle = BorderStyle.FixedSingle;
-            richTextBoxAusgabe.Dock = DockStyle.Fill;
-            richTextBoxAusgabe.Location = new Point(6, 4);
-            richTextBoxAusgabe.Margin = new Padding(6, 4, 6, 4);
-            richTextBoxAusgabe.Name = "richTextBoxAusgabe";
-            richTextBoxAusgabe.ReadOnly = true;
-            richTextBoxAusgabe.Size = new Size(865, 119);
-            richTextBoxAusgabe.TabIndex = 11;
-            richTextBoxAusgabe.Text = "";
-            richTextBoxAusgabe.Visible = false;
             // 
             // textBoxInput
             // 
@@ -250,6 +273,14 @@
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
             toolStripSeparator4.Size = new Size(6, 31);
+            // 
+            // messageLog
+            // 
+            messageLog.Dock = DockStyle.Fill;
+            messageLog.Location = new Point(3, 3);
+            messageLog.Name = "messageLog";
+            messageLog.Size = new Size(871, 121);
+            messageLog.TabIndex = 15;
             // 
             // connectionBoxesLayout
             // 
@@ -440,7 +471,6 @@
         private ToolStripProgressBar toolStripProgressBar;
         private TableLayoutPanel mainTable;
         private TableLayoutPanel logLayout;
-        private RichTextBox richTextBoxAusgabe;
         private TextBox textBoxInput;
         private TableLayoutPanel connectionBoxesLayout;
         private TextBox tbPasswort;
@@ -463,5 +493,10 @@
         private ToolStripButton toolStripButtonSend;
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripSeparator toolStripSeparator4;
+        private MessageLogControl messageLog;
+        private ToolStripSeparator toolStripSeparator5;
+        private ToolStripButton btClear;
+        private ToolStripSeparator toolStripSeparator6;
+        private ToolStripButton buttonExport;
     }
 }

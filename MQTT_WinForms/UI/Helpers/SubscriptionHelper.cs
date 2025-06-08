@@ -1,17 +1,16 @@
-﻿using MQTT_WinForms.DB;
+﻿using System.Text;
+using MQTT_WinForms.DB;
 using MQTT_WinForms.DB.Objects;
 using MQTT_WinForms.MQTT;
 using MQTTnet;
 using MQTTnet.Protocol;
-using System;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using MQTT_WinForms.UI.Forms;
 
 namespace MQTT_WinForms.UI.Helpers
 {
     public static class MqttSubscriptionHelper
     {
-        public static async Task SubscribeAsync(this MQTTWrapper wrapper, Subscription subscription, Action<string>? log = null)
+        public static async Task SubscribeAsync(this MQTTWrapper wrapper, Subscription subscription, Action<MessageLogControl.Log>? log = null)
         {
             if (wrapper?.Client?.IsConnected == true)
             {
@@ -20,7 +19,7 @@ namespace MQTT_WinForms.UI.Helpers
             }
         }
 
-        public static async Task UnsubscribeAsync(this MQTTWrapper wrapper, Subscription subscription, Action<string>? log = null)
+        public static async Task UnsubscribeAsync(this MQTTWrapper wrapper, Subscription subscription, Action<MessageLogControl.Log>? log = null)
         {
             if (wrapper?.Client?.IsConnected == true)
             {
@@ -29,14 +28,21 @@ namespace MQTT_WinForms.UI.Helpers
             }
         }
 
-        private static async Task UpdateSubscriptionStatus(Subscription subscription, bool isActive, Action<string>? log)
+        private static async Task UpdateSubscriptionStatus(Subscription subscription, bool isActive, Action<MessageLogControl.Log>? log)
         {
             subscription.IsActive = isActive;
-            string action = isActive ? "[SUBSCRIBED]" : "[UNSUBSCRIBED]";
-            log?.Invoke($"{action} - {subscription.Topic}{(isActive ? $" - QoS {subscription.QualityOfService}" : string.Empty)}");
+            string status = isActive ? "Subscribed" : "Unsubscribed";
+            MessageLogControl.Log toLog = new()
+            {
+                Status = status,
+                Topic = subscription.Topic,
+                QOS = subscription.QualityOfService,
+            };
 
-            await using var context = new DataBaseContext();
-            var dbSub = context.Subscriptions.FirstOrDefault(s => s.ID == subscription.ID);
+            log?.Invoke(toLog);
+
+            await using DataBaseContext context = new();
+            Subscription? dbSub = context.Subscriptions.FirstOrDefault(s => s.ID == subscription.ID);
             if (dbSub != null)
             {
                 dbSub.IsActive = isActive;

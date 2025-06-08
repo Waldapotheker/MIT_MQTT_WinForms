@@ -1,10 +1,7 @@
 ﻿using MQTT_WinForms.DB;
 using MQTT_WinForms.DB.Objects;
-using MQTT_WinForms.Migrations;
 using MQTT_WinForms.UI.Helpers;
-using MQTTnet;
 using MQTTnet.Protocol;
-using static MQTT_WinForms.UI.Forms.LoadConnectionForm;
 
 namespace MQTT_WinForms.UI.Forms
 {
@@ -30,7 +27,10 @@ namespace MQTT_WinForms.UI.Forms
                 })
                 .FirstOrDefault();
 
-            if (fullConnection == null) return;
+            if (fullConnection == null)
+            {
+                return;
+            }
 
             ManageSubscriptionsForm form = new()
             {
@@ -47,13 +47,13 @@ namespace MQTT_WinForms.UI.Forms
 
         private async void btAdd_Click(object sender, EventArgs e)
         {
-            var input = UserInput.QueryUser();
+            UserInput.InputResult? input = UserInput.QueryUser();
             if (!input.HasValue) return;
 
-            await using var context = new DataBaseContext();
+            await using DataBaseContext context = new();
             context.Connections.Attach(connection);
 
-            var sub = new Subscription
+            Subscription sub = new()
             {
                 Connection = connection,
                 QualityOfService = (int)input.Value.QualityOfService,
@@ -70,15 +70,21 @@ namespace MQTT_WinForms.UI.Forms
         {
             if (lbSubscriptions.SelectedItem is not SubscriptionItem subscriptionItem) return;
 
-            var input = UserInput.QueryUser(
+            UserInput.InputResult? input = UserInput.QueryUser(
                 subscriptionItem.Subscription.Topic,
                 (MqttQualityOfServiceLevel)subscriptionItem.Subscription.QualityOfService);
 
-            if (!input.HasValue) return;
+            if (!input.HasValue)
+            {
+                return;
+            }
 
-            await using var context = new DataBaseContext();
-            var subInDb = context.Subscriptions.FirstOrDefault(s => s.ID == subscriptionItem.Subscription.ID);
-            if (subInDb == null) return;
+            await using DataBaseContext context = new();
+            Subscription? subInDb = context.Subscriptions.FirstOrDefault(s => s.ID == subscriptionItem.Subscription.ID);
+            if (subInDb == null)
+            {
+                return;
+            }
 
             subInDb.Topic = input.Value.Topic;
             subInDb.QualityOfService = (int)input.Value.QualityOfService;
@@ -95,11 +101,13 @@ namespace MQTT_WinForms.UI.Forms
         {
             if (lbSubscriptions.SelectedItem is not SubscriptionItem item) return;
 
-            var control = TryGetBrokerControl();
+            ConnectToBrokerControl? control = TryGetBrokerControl();
             if (control?.Wrapper != null)
-                await control.Wrapper.UnsubscribeAsync(item.Subscription, control.SafeLog);
+            {
+                await control.Wrapper.UnsubscribeAsync(item.Subscription, control.GetLogControl().AddLogEntry);
+            }
 
-            await using var context = new DataBaseContext();
+            await using DataBaseContext context = new();
             context.Subscriptions.Remove(item.Subscription);
             await context.SaveChangesAsync();
 
@@ -111,36 +119,15 @@ namespace MQTT_WinForms.UI.Forms
             Close();
         }
 
-        private async void lbSubscriptions_DoubleClick(object sender, MouseEventArgs e)
-        {
-            int index = lbSubscriptions.IndexFromPoint(e.Location);
-            if (index == ListBox.NoMatches) return;
-
-            if (lbSubscriptions.Items[index] is SubscriptionItem item)
-            {
-                var control = TryGetBrokerControl();
-                if (control?.Wrapper != null)
-                    await control.Wrapper.SubscribeAsync(item.Subscription, control.SafeLog);
-            }
-        }
-
         private async void btSubscribe_Click(object sender, EventArgs e)
         {
             if (lbSubscriptions.SelectedItem is SubscriptionItem item)
             {
-                var control = TryGetBrokerControl();
+                ConnectToBrokerControl? control = TryGetBrokerControl();
                 if (control?.Wrapper != null)
-                    await control.Wrapper.SubscribeAsync(item.Subscription, control.SafeLog);
-            }
-        }
+                    await control.Wrapper.SubscribeAsync(item.Subscription, control.GetLogControl().AddLogEntry);
 
-        private async void btUnsubscribe_Click(object sender, EventArgs e)
-        {
-            if (lbSubscriptions.SelectedItem is SubscriptionItem item)
-            {
-                var control = TryGetBrokerControl();
-                if (control?.Wrapper != null)
-                    await control.Wrapper.UnsubscribeAsync(item.Subscription, control.SafeLog);
+                btSubscribe.Text = item.Subscription.IsActive ? "Unsubscribe" : "Subscribe";
             }
         }
 
@@ -150,20 +137,67 @@ namespace MQTT_WinForms.UI.Forms
                 return;
 
             e.DrawBackground();
+            Font font = e.Font;
+            Color color = e.ForeColor;
 
-            var color = item.Subscription.IsActive ? Color.DarkGreen : e.ForeColor;
-            using var brush = new SolidBrush(color);
-            e.Graphics.DrawString(item.ToString(), e.Font, brush, e.Bounds);
+            if (item.Subscription.IsActive)
+            {
+                color = Color.DarkGreen;
+                font = new Font(e.Font.FontFamily, e.Font.Size, FontStyle.Bold);
+            }
 
+            using SolidBrush brush = new(color);
+            e.Graphics.DrawString(item.ToString(), font, brush, e.Bounds);
             e.DrawFocusRectangle();
         }
 
         private static ConnectToBrokerControl? TryGetBrokerControl()
         {
-            return Application.OpenForms["MainForm"] is MainForm form &&
-                   form.ActiveControl is ConnectToBrokerControl control
-                   ? control
-                   : null;
+            return Application.OpenForms["MainForm"] is MainForm
+            { ActiveControl: ConnectToBrokerControl control }
+                ? control : null;
+        }
+
+        private async void lbSubscriptions_DoubleClick(object sender, MouseEventArgs e)
+        {
+            int index = lbSubscriptions.IndexFromPoint(e.Location);
+            if (index == ListBox.NoMatches)
+            {
+                return;
+            }
+
+            if (lbSubscriptions.Items[index] is not SubscriptionItem item)
+            {
+                return;
+            }
+            ConnectToBrokerControl? control = TryGetBrokerControl();
+            if (control?.Wrapper == null)
+            {
+                return;
+            }
+
+            if (item.Subscription.IsActive)
+            {
+                await control.Wrapper.UnsubscribeAsync(item.Subscription, control.GetLogControl().AddLogEntry);
+            }
+            else
+            {
+                await control.Wrapper.SubscribeAsync(item.Subscription, control.GetLogControl().AddLogEntry);
+            }
+
+            btSubscribe.Text = item.Subscription.IsActive ? "Unsubscribe" : "Subscribe";
+        }
+
+        private void lbSubscriptions_MouseClick(object sender, MouseEventArgs e)
+        {
+            int index = lbSubscriptions.IndexFromPoint(e.Location);
+            if (index == ListBox.NoMatches) return;
+
+            if (lbSubscriptions.Items[index] is not SubscriptionItem item)
+            {
+                return;
+            }
+            btSubscribe.Text = item.Subscription.IsActive ? "Unsubscribe" : "Subscribe";
         }
     }
 

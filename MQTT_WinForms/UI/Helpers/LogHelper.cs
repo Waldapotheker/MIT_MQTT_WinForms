@@ -1,24 +1,19 @@
-﻿using MQTT_WinForms.DB.Objects;
-using MQTT_WinForms.MQTT;
-using MQTTnet.Protocol;
-using System;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using Message = MQTT_WinForms.DB.Objects.Message;
 
 namespace MQTT_WinForms.UI.Helpers
 {
     public interface ILogSink
     {
-        void LogMessage(string message);
+        void LogMessage(Message message);
     }
 
     public static class LogHelper
     {
-        public static void SafeLog(this ILogSink sink, string message)
+        public static void SafeLog(this ILogSink sink, Message message)
         {
-            if (sink is Control control && control.InvokeRequired)
+            if (sink is Control { InvokeRequired: true } control)
             {
-                control.Invoke(new Action(() => sink.LogMessage(message)));
+                control.Invoke(() => sink.LogMessage(message));
             }
             else
             {

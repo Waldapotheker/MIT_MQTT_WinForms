@@ -58,8 +58,8 @@
             tabControl.Size = new Size(799, 471);
             tabControl.SizeMode = TabSizeMode.FillToRight;
             tabControl.TabIndex = 4;
-            tabControl.HandleCreated += TabControlOnHandleCreated;
             tabControl.DrawItem += TabControl_DrawItem;
+            tabControl.HandleCreated += TabControlOnHandleCreated;
             tabControl.MouseDown += TabControl_MouseDown;
             // 
             // toolStrip
@@ -116,7 +116,7 @@
             Controls.Add(toolStrip);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MainForm";
-            Text = "MQTT Client";
+            Text = "WinMQTT";
             toolStrip.ResumeLayout(false);
             toolStrip.PerformLayout();
             ResumeLayout(false);

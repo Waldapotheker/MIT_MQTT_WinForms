@@ -5,7 +5,7 @@ using MQTT_WinForms.DB.Objects;
 using MQTT_WinForms.MQTT;
 using MQTT_WinForms.UI.Helpers;
 using MQTTnet.Protocol;
-using System.Windows.Forms;
+using System.Text;
 using Message = MQTT_WinForms.DB.Objects.Message;
 
 namespace MQTT_WinForms.UI.Forms
@@ -26,28 +26,32 @@ namespace MQTT_WinForms.UI.Forms
             nudPort.Value = 1883;
             tbClientId.Text = "default";
 
-            richTextBoxAusgabe.Visible = true;
             textBoxInput.Visible = true;
             mainTable.RowStyles[0].Height = 100;
             mainTable.RowStyles[1].Height = 0;
         }
 
-        public void LogMessage(string message)
+        public MessageLogControl GetLogControl()
         {
-            richTextBoxAusgabe.AppendText(message + Environment.NewLine);
+            return messageLog;
+        }
+
+        public void LogMessage(Message message)
+        {
+            messageLog.AddEntry(message);
         }
 
         private async Task<bool> Connect(MQTTWrapper wrapper)
         {
             if (wrapper?.Options == null) return false;
 
-            var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+            TaskCompletionSource<bool> tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
             wrapper.Connected += (s, e) => tcs.TrySetResult(true);
 
-            var status = await wrapper.ConnectAsync();
+            MqttClientHelper.Status status = await wrapper.ConnectAsync();
             if (status != MqttClientHelper.Status.Success) tcs.TrySetResult(false);
 
-            var completed = await Task.WhenAny(tcs.Task, Task.Delay(wrapper.Options.Timeout));
+            Task completed = await Task.WhenAny(tcs.Task, Task.Delay(wrapper.Options.Timeout));
             return completed == tcs.Task && await tcs.Task;
         }
 
@@ -55,17 +59,17 @@ namespace MQTT_WinForms.UI.Forms
         {
             if (Wrapper?.Options == null)
                 return false;
-        
+
             TaskCompletionSource<bool> tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
-        
+
             MqttClientHelper.Status status = await Wrapper.PublishAsync(PublishTopic, text, qos: PublishQOS);
-        
+
             tcs.TrySetResult(status == MqttClientHelper.Status.Success);
-        
+
             Task completion = await Task.WhenAny(tcs.Task, Task.Delay(Wrapper.Options.Timeout));
-        
+
             if (completion == tcs.Task) return await tcs.Task;
-        
+
             return false;
         }
 
@@ -79,7 +83,7 @@ namespace MQTT_WinForms.UI.Forms
             toolStripProgressBar.Value = 25;
             toolStripStatusLabel.Text = "Verbinde...";
 
-            var connectionData = new ConnectionData
+            ConnectionData connectionData = new()
             {
                 Address = tbAdresse.Text,
                 Port = Convert.ToInt32(nudPort.Value),
@@ -94,8 +98,8 @@ namespace MQTT_WinForms.UI.Forms
 
             if (await Connect(Wrapper))
             {
-                await using var context = new DataBaseContext();
-                var existingConnection = context.Connections.FirstOrDefault(x =>
+                await using DataBaseContext context = new();
+                Connection? existingConnection = context.Connections.FirstOrDefault(x =>
                     x.Host == connectionData.Address &&
                     x.Port == connectionData.Port &&
                     x.Username == connectionData.Username &&
@@ -116,7 +120,6 @@ namespace MQTT_WinForms.UI.Forms
 
                 Connection = existingConnection;
 
-                richTextBoxAusgabe.Clear();
                 await SubscribeToSavedTopicsAsync();
                 await LoadSavedMessagesAsync();
 
@@ -124,6 +127,8 @@ namespace MQTT_WinForms.UI.Forms
                 toolStripStatusLabel.Text = "Verbindung erfolgreich!";
                 toolStripButtonSave.Enabled = true;
                 toolStripButtonSend.Enabled = true;
+                buttonExport.Enabled = true;
+                btClear.Enabled = true;
             }
             else
             {
@@ -216,13 +221,9 @@ namespace MQTT_WinForms.UI.Forms
 
                 if (result)
                 {
-                    string formatted = string.Format("{0,-10} {1,-20} {2,-5} {3,-10} {4}", "[SEND]",
-                        PublishTopic, (int)PublishQOS, DateTime.Now.ToString("HH:mm:ss"), messageText);
-
-                    richTextBoxAusgabe.AppendText(formatted + Environment.NewLine);
-                    toolStripStatusLabel.Text = "Erfolgreich gesendet";
                     await LogSentMessageAsync(PublishTopic, messageText);
                     textBoxInput.Text = string.Empty;
+                    toolStripStatusLabel.Text = "Erfolgreich gesendet";
                 }
                 else
                 {
@@ -241,17 +242,12 @@ namespace MQTT_WinForms.UI.Forms
 
             try
             {
-                await using var context = new DataBaseContext();
-                var subscriptions = context.Subscriptions
-                    .Where(s => s.Connection.ID == Connection.ID && s.IsActive)
-                    .ToList();
+                await using DataBaseContext context = new();
+                List<Subscription> subscriptions = context.Subscriptions
+                                                          .Where(s => s.Connection.ID == Connection.ID && s.IsActive)
+                                                          .ToList();
 
-                foreach (var sub in subscriptions)
-                {
-                    await Wrapper.SubscribeAsync(sub, this.SafeLog);
-                }
-
-                this.SafeLog("");
+                foreach (Subscription sub in subscriptions) await Wrapper.SubscribeAsync(sub, messageLog.AddLogEntry);
             }
             catch
             {
@@ -263,27 +259,17 @@ namespace MQTT_WinForms.UI.Forms
         {
             if (Connection == null) return;
 
-            string header = string.Format("{0,-10} {1,-20} {2,-5} {3,-10} {4}", "Direction", "Topic", "QoS", "Time", "Text");
-            richTextBoxAusgabe.AppendText(header + Environment.NewLine);
-
             try
             {
-                await using var context = new DataBaseContext();
-                var savedMessages = context.Messages
-                    .Where(m => m.Topic == PublishTopic)
-                    .OrderByDescending(m => m.Timestamp)
-                    .Take(100)
-                    .OrderBy(m => m.Timestamp)
-                    .ToList();
+                await using DataBaseContext context = new();
+                List<Message> savedMessages = context.Messages
+                                                     .Where(m => m.Topic == PublishTopic && m.Connection == Connection)
+                                                     .OrderByDescending(m => m.Timestamp)
+                                                     .Take(100)
+                                                     .OrderBy(m => m.Timestamp)
+                                                     .ToList();
 
-                foreach (var message in savedMessages)
-                {
-                    string prefix = message.Direction == MessageDirection.Sent ? "[SEND]" : "[RECV]";
-                    string formatted = string.Format("{0,-10} {1,-20} {2,-5} {3,-10} {4}",
-                        prefix, message.Topic, message.QoSLevel, message.Timestamp.ToString("HH:mm:ss"), message.MessageText);
-
-                    richTextBoxAusgabe.AppendText(formatted + Environment.NewLine);
-                }
+                foreach (Message message in savedMessages) LogMessage(message);
             }
             catch
             {
@@ -293,16 +279,14 @@ namespace MQTT_WinForms.UI.Forms
 
         private async void OnMessageReceived(object? sender, MQTTWrapper.MessageEventArgs e)
         {
-            string formatted = string.Format("{0,-10} {1,-20} {2,-5} {3,-10} {4}",
-                "[RECV]", e.Topic, (int)e.QoS, DateTime.Now.ToString("HH:mm:ss"), e.Message);
-
-            this.SafeLog(formatted);
+            if (Connection == null) return;
 
             try
             {
-                await using var context = new DataBaseContext();
-                var log = new Message
+                await using DataBaseContext context = new();
+                Message log = new()
                 {
+                    Connection = Connection,
                     Topic = e.Topic ?? "unknown",
                     MessageText = e.Message ?? "",
                     Timestamp = DateTime.Now,
@@ -310,6 +294,8 @@ namespace MQTT_WinForms.UI.Forms
                     QoSLevel = (int)e.QoS,
                     ClientID = Wrapper?.Options?.ClientId ?? "unknown"
                 };
+
+                this.SafeLog(log);
                 context.Messages.Add(log);
                 await context.SaveChangesAsync();
             }
@@ -333,26 +319,29 @@ namespace MQTT_WinForms.UI.Forms
 
         private void ManageSubscriptions(object sender, EventArgs e)
         {
-            using (DataBaseContext context = new())
-            {
-                if (Connection == null) return;
+            using DataBaseContext context = new();
+            if (Connection == null) return;
 
-                ManageSubscriptionsForm.Manage(Connection);
-            }
+            ManageSubscriptionsForm.Manage(Connection);
         }
 
         private async Task LogSentMessageAsync(string topic, string messageText)
         {
+            if (Connection == null) return;
+
             try
             {
                 await using DataBaseContext context = new();
                 Message log = new()
                 {
+                    Connection = Connection,
                     Topic = topic,
                     MessageText = messageText,
                     Timestamp = DateTime.Now,
                     Direction = MessageDirection.Sent
                 };
+
+                LogMessage(log);
                 context.Messages.Add(log);
                 await context.SaveChangesAsync();
             }
@@ -365,6 +354,58 @@ namespace MQTT_WinForms.UI.Forms
         private async void toolStripButtonSend_Click(object sender, EventArgs e)
         {
             await SendMessageAsync();
+        }
+
+        private async void btClear_Click(object sender, EventArgs e)
+        {
+            await ClearLog();
+        }
+
+        private async Task ClearLog()
+        {
+            if (Connection == null)
+            {
+                return;
+            }
+
+            await using DataBaseContext context = new();
+
+            foreach (Message message in context.Messages.Where(x => x.Connection == Connection))
+            {
+                context.Messages.Remove(message);
+            }
+
+            await context.SaveChangesAsync();
+            messageLog.Clear();
+        }
+
+        private async void buttonExport_Click(object sender, EventArgs e)
+        {
+            if (Connection == null)
+            {
+                return;
+            }
+
+            SaveFileDialog dialog = new();
+            dialog.FileName = $"{Connection.Host}_{Connection.Port}_{Connection.Username}.csv";
+            dialog.CheckPathExists = true;
+            dialog.CheckWriteAccess = true;
+            dialog.OverwritePrompt = true;
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string path = dialog.FileName;
+                string data = messageLog.ToCSV(path);
+
+                File.WriteAllText(path, data, Encoding.UTF8);
+                DialogResult result = MessageBox.Show("Protokoll gespeichert.\nBestehendes Protokoll leeren?", "Export erfolgreich",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    await ClearLog();
+                }
+            }
         }
     }
 }
