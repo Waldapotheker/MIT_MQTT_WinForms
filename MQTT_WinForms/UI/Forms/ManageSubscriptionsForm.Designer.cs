@@ -47,6 +47,8 @@
             lbSubscriptions.Size = new Size(786, 304);
             lbSubscriptions.TabIndex = 0;
             lbSubscriptions.MouseDoubleClick += lbSubscriptions_DoubleClick;
+            lbSubscriptions.DrawMode = DrawMode.OwnerDrawFixed;
+            lbSubscriptions.DrawItem += LbSubscriptions_DrawItem;
             // 
             // btOK
             // 

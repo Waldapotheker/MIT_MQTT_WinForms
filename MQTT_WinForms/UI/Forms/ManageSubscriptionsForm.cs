@@ -1,5 +1,6 @@
 ﻿using MQTT_WinForms.DB;
 using MQTT_WinForms.DB.Objects;
+using MQTT_WinForms.Migrations;
 using MQTT_WinForms.UI.Helpers;
 using MQTTnet;
 using MQTTnet.Protocol;
@@ -96,7 +97,7 @@ namespace MQTT_WinForms.UI.Forms
 
             var control = TryGetBrokerControl();
             if (control?.Wrapper != null)
-                await control.Wrapper.UnsubscribeAsync(item.Subscription.Topic, control.SafeLog);
+                await control.Wrapper.UnsubscribeAsync(item.Subscription, control.SafeLog);
 
             await using var context = new DataBaseContext();
             context.Subscriptions.Remove(item.Subscription);
@@ -119,7 +120,7 @@ namespace MQTT_WinForms.UI.Forms
             {
                 var control = TryGetBrokerControl();
                 if (control?.Wrapper != null)
-                    await control.Wrapper.SubscribeAsync(item.Subscription.Topic, item.Subscription.QualityOfService, control.SafeLog);
+                    await control.Wrapper.SubscribeAsync(item.Subscription, control.SafeLog);
             }
         }
 
@@ -129,7 +130,7 @@ namespace MQTT_WinForms.UI.Forms
             {
                 var control = TryGetBrokerControl();
                 if (control?.Wrapper != null)
-                    await control.Wrapper.SubscribeAsync(item.Subscription.Topic, item.Subscription.QualityOfService, control.SafeLog);
+                    await control.Wrapper.SubscribeAsync(item.Subscription, control.SafeLog);
             }
         }
 
@@ -139,8 +140,22 @@ namespace MQTT_WinForms.UI.Forms
             {
                 var control = TryGetBrokerControl();
                 if (control?.Wrapper != null)
-                    await control.Wrapper.UnsubscribeAsync(item.Subscription.Topic, control.SafeLog);
+                    await control.Wrapper.UnsubscribeAsync(item.Subscription, control.SafeLog);
             }
+        }
+
+        private void LbSubscriptions_DrawItem(object? sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0 || lbSubscriptions.Items[e.Index] is not SubscriptionItem item)
+                return;
+
+            e.DrawBackground();
+
+            var color = item.Subscription.IsActive ? Color.DarkGreen : e.ForeColor;
+            using var brush = new SolidBrush(color);
+            e.Graphics.DrawString(item.ToString(), e.Font, brush, e.Bounds);
+
+            e.DrawFocusRectangle();
         }
 
         private static ConnectToBrokerControl? TryGetBrokerControl()

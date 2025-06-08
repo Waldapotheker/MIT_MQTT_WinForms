@@ -243,12 +243,12 @@ namespace MQTT_WinForms.UI.Forms
             {
                 await using var context = new DataBaseContext();
                 var subscriptions = context.Subscriptions
-                    .Where(s => s.Connection.ID == Connection.ID)
+                    .Where(s => s.Connection.ID == Connection.ID && s.IsActive)
                     .ToList();
 
                 foreach (var sub in subscriptions)
                 {
-                    await Wrapper.SubscribeAsync(sub.Topic, sub.QualityOfService, this.SafeLog);
+                    await Wrapper.SubscribeAsync(sub, this.SafeLog);
                 }
 
                 this.SafeLog("");

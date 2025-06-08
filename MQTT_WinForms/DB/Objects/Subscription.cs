@@ -13,5 +13,7 @@ namespace MQTT_WinForms.DB.Objects
         public int QualityOfService { get; set; }
 
         public Connection Connection { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }
