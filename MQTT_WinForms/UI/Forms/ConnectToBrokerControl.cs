@@ -137,6 +137,7 @@ namespace MQTT_WinForms.UI.Forms
                 toolStripButtonSend.Enabled = true;
                 buttonExport.Enabled = true;
                 btClear.Enabled = true;
+                toolStripButtonConnect.Enabled = false;
 
                 _ = Task.Run(ProcessMessageChannel);
             }
