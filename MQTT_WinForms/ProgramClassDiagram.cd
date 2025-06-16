@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="BASE">
+    <Position X="1.26" Y="1.104" Height="0.291" Width="0.7" />
+  </Comment>
+  <Comment CommentText="MQTT_WinForms">
+    <Position X="1.25" Y="0.646" Height="0.291" Width="6.814" />
+  </Comment>
+  <Comment CommentText="DB">
+    <Position X="5.027" Y="1.12" Height="0.291" Width="0.7" />
+  </Comment>
+  <Comment CommentText="Enums">
+    <Position X="5.006" Y="4.063" Height="0.291" Width="0.7" />
+  </Comment>
+  <Comment CommentText="Objects">
+    <Position X="5.011" Y="5.852" Height="0.291" Width="0.7" />
+  </Comment>
+  <Comment CommentText="MQTT">
+    <Position X="10.77" Y="0.978" Height="0.291" Width="0.7" />
+  </Comment>
+  <Class Name="MQTT_WinForms.BASE.Program">
+    <Position X="3" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>BASE\Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MQTT_WinForms.DB.Objects.BaseObject">
+    <Position X="6.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>DB\Objects\BaseObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MQTT_WinForms.DB.Objects.Connection">
+    <Position X="8.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAACAAACAACAAAEAAAAAAA=</HashCode>
+      <FileName>DB\Objects\Connection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MQTT_WinForms.DB.Objects.Message">
+    <Position X="5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAEAACACAAAAAAAAAAAAAAgQACAAAAA=</HashCode>
+      <FileName>DB\Objects\Message.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MQTT_WinForms.DB.Objects.Subscription">
+    <Position X="6.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAEAEAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>DB\Objects\Subscription.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MQTT_WinForms.DB.DataBaseContext">
+    <Position X="5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAgAAAAEASAAAAA=</HashCode>
+      <FileName>DB\DataBaseContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MQTT_WinForms.MQTT.Connections">
+    <Position X="10.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>MQTT\Connections.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MQTT_WinForms.MQTT.MqttClientHelper">
+    <Position X="12.5" Y="1.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="MQTT_WinForms.MQTT.MqttClientHelper.Status">
+        <TypeIdentifier>
+          <NewMemberFileName>MQTT\MqttClientHelper.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Struct Name="MQTT_WinForms.MQTT.MqttClientHelper.Subscription">
+        <TypeIdentifier>
+          <NewMemberFileName>MQTT\MqttClientHelper.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="MQTT_WinForms.MQTT.MqttClientHelper.SubscriptionResult">
+        <TypeIdentifier>
+          <NewMemberFileName>MQTT\MqttClientHelper.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MQTT\MqttClientHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MQTT_WinForms.MQTT.MQTTWrapper">
+    <Position X="14.25" Y="1.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="MQTT_WinForms.MQTT.MQTTWrapper.MessageEventArgs">
+        <TypeIdentifier>
+          <NewMemberFileName>MQTT\MQTTWrapper.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAQQAAAAAAgQCAACgAAQAAAAAAAgBAAAQ=</HashCode>
+      <FileName>MQTT\MQTTWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="MQTT_WinForms.BASE.ConnectionData">
+    <Position X="1.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAQAAAAAACAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>BASE\ConnectionData.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="MQTT_WinForms.DB.Enums.MessageDirection">
+    <Position X="5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>DB\Enums\MessageDirection.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
